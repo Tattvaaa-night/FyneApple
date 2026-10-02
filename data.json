@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Tropical Fruits Guide: Pineapple, Mango, Papaya and More",
+    "url": "https://example.com/tropical-fruits-guide",
+    "snippet": "Explore the flavor, texture, nutrition, and culinary uses of popular tropical fruits including pineapple, mango, papaya, passion fruit, and guava.",
+    "content": "Tropical fruits thrive in warm climates and are prized for bright flavors and juicy textures. Pineapple is tart and sweet, mango is fragrant and creamy, papaya is soft with a musky sweetness, while guava and passion fruit add intense aroma. These fruits are commonly used in fresh salads, smoothies, desserts, chutneys, and fruit salsas."
+  },
+  {
+    "title": "Easy Pineapple Salsa Recipe",
+    "url": "https://example.com/recipes/pineapple-salsa",
+    "snippet": "A quick pineapple salsa made with fresh pineapple, lime, red onion, cilantro, and chili. Great with tacos, grilled vegetables, or tortilla chips.",
+    "content": "Dice fresh pineapple, red onion, and jalapeno into small pieces. Toss them with chopped cilantro, lime juice, and a pinch of salt. Let the salsa rest for ten minutes so the flavors combine. This tropical recipe balances sweet pineapple with bright lime, fresh herbs, and gentle heat."
+  },
+  {
+    "title": "The History of the Internet: From ARPANET to the Web",
+    "url": "https://example.com/tech/internet-history",
+    "snippet": "Trace the development of computer networking from ARPANET and packet switching to the World Wide Web and the modern internet.",
+    "content": "The history of the internet includes foundational work in packet switching, ARPANET, TCP/IP, and distributed computer networks. ARPANET connected research institutions before the modern internet emerged. Tim Berners-Lee later proposed the World Wide Web, combining documents, hyperlinks, and browsers into a system that expanded access to information across the world."
+  },
+  {
+    "title": "Mango Coconut Smoothie",
+    "url": "https://example.com/recipes/mango-coconut-smoothie",
+    "snippet": "Blend ripe mango, coconut milk, banana, and ice for a creamy tropical smoothie that works as breakfast or a refreshing afternoon drink.",
+    "content": "For a mango coconut smoothie, combine one ripe mango, coconut milk, half a banana, and ice in a blender. Blend until smooth and creamy. Mango provides natural sweetness and a rich tropical flavor, while coconut milk adds body. The recipe can be adjusted with lime juice or yogurt."
+  },
+  {
+    "title": "A Brief History of the Smartphone",
+    "url": "https://example.com/tech/smartphone-history",
+    "snippet": "Learn how early mobile phones evolved into smartphones through touchscreens, mobile operating systems, app stores, and fast wireless networks.",
+    "content": "Smartphone history grew from early mobile phones and personal digital assistants. Devices such as the IBM Simon demonstrated an early combination of phone and computing features. Later, BlackBerry popularized mobile email, while the iPhone and Android ecosystem accelerated touchscreen interfaces, app stores, mobile software, cameras, and internet access."
+  }
+]

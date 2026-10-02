@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="FyneApple live web search results."
+    >
+
+    <title>
+
+        {% if query %}
+
+            {{ query }} - FyneApple
+
+        {% else %}
+
+            FyneApple
+
+        {% endif %}
+
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        fyne: {
+
+                            gold: "#FFD43B",
+
+                            orange: "#FF9F1C",
+
+                            violet: "#9B5DE5",
+
+                            cyan: "#00D9FF",
+
+                            green: "#5CE65C",
+
+                            night: "#070A18"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        };
+
+    </script>
+
+
+    <style>
+
+        :root {
+
+            color-scheme: dark;
+
+        }
+
+
+        body {
+
+            background:
+
+                radial-gradient(
+                    circle at 7% 4%,
+                    rgba(
+                        255,
+                        159,
+                        28,
+                        .10
+                    ),
+                    transparent 23%
+                ),
+
+                radial-gradient(
+                    circle at 91% 2%,
+                    rgba(
+                        0,
+                        217,
+                        255,
+                        .08
+                    ),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 67% 95%,
+                    rgba(
+                        155,
+                        93,
+                        229,
+                        .10
+                    ),
+                    transparent 30%
+                ),
+
+                #070A18;
+
+        }
+
+
+        .glass {
+
+            background:
+                rgba(
+                    15,
+                    19,
+                    39,
+                    .68
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .08
+                );
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+        }
+
+
+        .result-card {
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                background .18s ease;
+
+        }
+
+
+        .result-card:hover {
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .16
+                );
+
+            background:
+                rgba(
+                    20,
+                    25,
+                    49,
+                    .78
+                );
+
+        }
+
+
+        .shine {
+
+            background:
+
+                linear-gradient(
+                    100deg,
+                    #ffffff 8%,
+                    #fff176 42%,
+                    #ffd43b 60%,
+                    #ff9f1c 78%,
+                    #9b5de5 100%
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+        }
+
+
+        .search-shell {
+
+            background:
+
+                linear-gradient(
+                    rgba(
+                        11,
+                        15,
+                        31,
+                        .96
+                    ),
+                    rgba(
+                        11,
+                        15,
+                        31,
+                        .96
+                    )
+                )
+                padding-box,
+
+                linear-gradient(
+                    100deg,
+                    #ffb703,
+                    #ffd43b,
+                    #00d9ff,
+                    #9b5de5
+                )
+                border-box;
+
+            border:
+                1px solid
+                transparent;
+
+        }
+
+
+        .pulse-dot {
+
+            animation:
+                pulseDot
+                2s
+                ease-in-out
+                infinite;
+
+        }
+
+
+        @keyframes pulseDot {
+
+            0%,
+            100% {
+
+                opacity: .45;
+
+                transform:
+                    scale(.9);
+
+            }
+
+            50% {
+
+                opacity: 1;
+
+                transform:
+                    scale(1.1);
+
+            }
+
+        }
+
+
+        .truncate-url {
+
+            white-space:
+                nowrap;
+
+            overflow:
+                hidden;
+
+            text-overflow:
+                ellipsis;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body
+    class="min-h-screen text-white antialiased"
+>
+
+
+    <header
+        class="sticky top-0 z-20 border-b border-white/5 bg-[#070A18]/85 backdrop-blur-xl"
+    >
+
+        <div
+            class="mx-auto max-w-7xl px-5 py-4 lg:px-8"
+        >
+
+
+            <div
+                class="flex flex-col gap-4 md:flex-row md:items-center"
+            >
+
+
+                <a
+                    href="/"
+                    class="flex shrink-0 items-center gap-2.5"
+                    aria-label="FyneApple home"
+                >
+
+
+                    <svg
+                        width="36"
+                        height="36"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+
+                        <defs>
+
+                            <linearGradient
+                                id="mini-pine"
+                                x1="8"
+                                y1="6"
+                                x2="40"
+                                y2="43"
+                                gradientUnits="userSpaceOnUse"
+                            >
+
+                                <stop
+                                    stop-color="#FFF176"
+                                />
+
+                                <stop
+                                    offset=".45"
+                                    stop-color="#FFD43B"
+                                />
+
+                                <stop
+                                    offset="1"
+                                    stop-color="#FF8F00"
+                                />
+
+                            </linearGradient>
+
+
+                            <linearGradient
+                                id="mini-leaf"
+                                x1="15"
+                                y1="3"
+                                x2="34"
+                                y2="17"
+                                gradientUnits="userSpaceOnUse"
+                            >
+
+                                <stop
+                                    stop-color="#B9FF6A"
+                                />
+
+                                <stop
+                                    offset="1"
+                                    stop-color="#35C96A"
+                                />
+
+                            </linearGradient>
+
+                        </defs>
+
+
+                        <path
+                            d="M24 2C22 5 18 8 15 10L19 15C21 13 23 11 24 9C25 11 27 13 29 15L33 10C30 8 26 5 24 2Z"
+                            fill="url(#mini-leaf)"
+                        />
+
+
+                        <path
+                            d="M24 7C20 6 16 5 13 5C14 9 17 13 21 15L24 11V7Z"
+                            fill="#71E66D"
+                        />
+
+
+                        <path
+                            d="M24 7C28 6 32 5 35 5C34 9 31 13 27 15L24 11V7Z"
+                            fill="#49C957"
+                        />
+
+
+                        <path
+                            d="M24 13C17 13 11 19 11 28C11 37 16 44 24 46C32 44 37 37 37 28C37 19 31 13 24 13Z"
+                            fill="url(#mini-pine)"
+                        />
+
+
+                        <path
+                            d="M16 18L32 39M32 18L16 39M12.5 27H35.5M15 34H33"
+                            stroke="#A85B00"
+                            stroke-width="1.6"
+                            opacity=".72"
+                        />
+
+                    </svg>
+
+
+                    <span
+                        class="text-xl font-extrabold tracking-tight"
+                    >
+
+                        Fyne<span class="shine">
+                            Apple
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+                <form
+                    action="/search"
+                    method="get"
+                    class="w-full md:max-w-3xl"
+                    role="search"
+                >
+
+
+                    <label
+                        for="query"
+                        class="sr-only"
+                    >
+                        Search the web
+                    </label>
+
+
+                    <div
+                        class="search-shell flex items-center rounded-2xl p-1"
+                    >
+
+
+                        <svg
+                            class="ml-4 h-5 w-5 shrink-0 text-slate-400"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                            ></circle>
+
+                            <path
+                                d="m20 20-3.5-3.5"
+                            ></path>
+
+                        </svg>
+
+
+                        <input
+                            id="query"
+                            name="q"
+                            type="search"
+                            maxlength="300"
+                            autocomplete="off"
+                            value="{{ query }}"
+                            class="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500"
+                            placeholder="Search anything..."
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 transition hover:scale-105"
+                            aria-label="Search"
+                        >
+
+                            <svg
+                                class="h-4 w-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.4"
+                                aria-hidden="true"
+                            >
+
+                                <circle
+                                    cx="11"
+                                    cy="11"
+                                    r="7"
+                                ></circle>
+
+                                <path
+                                    d="m20 20-3.5-3.5"
+                                ></path>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <button
+                    id="focus-button"
+                    type="button"
+                    class="hidden rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs text-slate-300 transition hover:border-yellow-300/20 hover:text-white md:block"
+                >
+                    Press /
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main
+        class="mx-auto w-full max-w-7xl px-5 pb-16 pt-5 lg:px-8"
+    >
+
+
+        {% if query %}
+
+
+            <div
+                class="mb-5 flex flex-wrap items-center gap-2"
+            >
+
+
+                <span
+                    class="flex items-center gap-2 rounded-full border border-yellow-300/15 bg-yellow-300/5 px-3 py-1.5 text-xs text-yellow-200"
+                >
+
+                    <span
+                        class="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-yellow-300"
+                    ></span>
+
+                    LIVE WEB
+
+                </span>
+
+
+                <span
+                    class="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-slate-400"
+                >
+
+                    About
+
+                    {{ result_count }}
+
+                    result{% if result_count != 1 %}s{% endif %}
+
+                </span>
+
+
+                <span
+                    class="rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1.5 text-xs text-cyan-200"
+                >
+
+                    {{ elapsed_ms }} ms
+
+                </span>
+
+
+                {% if live_search_used %}
+
+                    <span
+                        class="rounded-full border border-green-300/15 bg-green-300/5 px-3 py-1.5 text-xs text-green-200"
+                    >
+                        Fresh search
+                    </span>
+
+                {% else %}
+
+                    <span
+                        class="rounded-full border border-orange-300/15 bg-orange-300/5 px-3 py-1.5 text-xs text-orange-200"
+                    >
+                        Local fallback
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+            {% if message %}
+
+                <div
+                    class="mb-5 max-w-3xl rounded-xl border border-yellow-300/15 bg-yellow-300/5 px-4 py-3 text-sm text-yellow-100"
+                    role="status"
+                >
+
+                    {{ message }}
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <div
+                class="mt-6 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 text-sm text-slate-400"
+            >
+
+                Enter a query above to search the live web.
+
+            </div>
+
+        {% endif %}
+
+
+        {% if results %}
+
+
+            <section
+                class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]"
+                aria-label="Search results"
+            >
+
+
+                <div
+                    class="space-y-3"
+                >
+
+
+                    {% for result in results %}
+
+
+                        <article
+                            class="result-card rounded-2xl border border-white/5 px-1 py-4 sm:px-4"
+                        >
+
+
+                            <div
+                                class="flex items-start gap-3"
+                            >
+
+
+                                <div
+                                    class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300/15 to-violet-400/15 text-sm font-bold text-yellow-200"
+                                >
+
+                                    {{ result.display_url[:1]|upper if result.display_url else "W" }}
+
+                                </div>
+
+
+                                <div
+                                    class="min-w-0 flex-1"
+                                >
+
+
+                                    <div
+                                        class="truncate-url mb-1 text-xs leading-5 text-emerald-300/80"
+                                        title="{{ result.url }}"
+                                    >
+
+                                        {{ result.display_url }}
+
+                                    </div>
+
+
+                                    <a
+                                        href="{{ result.url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-block rounded text-xl font-medium leading-7 text-violet-300 transition hover:text-yellow-200 hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-300/30 sm:text-[21px]"
+                                    >
+
+                                        {{ result.title }}
+
+                                    </a>
+
+
+                                    <p
+                                        class="mt-1.5 text-sm leading-6 text-slate-400"
+                                    >
+
+                                        {{ result.snippet }}
+
+                                    </p>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </article>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+                <aside
+                    class="hidden lg:block"
+                >
+
+
+                    <div
+                        class="glass sticky top-28 rounded-2xl p-5"
+                    >
+
+
+                        <div
+                            class="flex items-center gap-2 text-sm font-semibold"
+                        >
+
+                            <span
+                                class="text-yellow-300"
+                            >
+                                ✦
+                            </span>
+
+                            FynePulse
+
+                        </div>
+
+
+                        <p
+                            class="mt-2 text-sm leading-6 text-slate-400"
+                        >
+
+                            FyneApple searches the live public web and then
+                            applies a lightweight relevance pass to help
+                            important query matches stand out.
+
+                        </p>
+
+
+                        <div
+                            class="my-5 h-px bg-white/5"
+                        ></div>
+
+
+                        <p
+                            class="text-xs uppercase tracking-[0.18em] text-slate-500"
+                        >
+                            Search stats
+                        </p>
+
+
+                        <div
+                            class="mt-3 space-y-2 text-sm"
+                        >
+
+
+                            <div
+                                class="flex items-center justify-between"
+                            >
+
+                                <span
+                                    class="text-slate-500"
+                                >
+                                    Results
+                                </span>
+
+                                <span
+                                    class="text-slate-200"
+                                >
+                                    {{ result_count }}
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="flex items-center justify-between"
+                            >
+
+                                <span
+                                    class="text-slate-500"
+                                >
+                                    Response
+                                </span>
+
+                                <span
+                                    class="text-slate-200"
+                                >
+                                    {{ elapsed_ms }} ms
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="flex items-center justify-between"
+                            >
+
+                                <span
+                                    class="text-slate-500"
+                                >
+                                    Source
+                                </span>
+
+                                <span
+                                    class="text-yellow-200"
+                                >
+
+                                    {% if live_search_used %}
+                                        Live web
+                                    {% else %}
+                                        Local index
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div
+                            class="my-5 h-px bg-white/5"
+                        ></div>
+
+
+                        <p
+                            class="text-xs uppercase tracking-[0.18em] text-slate-500"
+                        >
+                            Try next
+                        </p>
+
+
+                        <div
+                            class="mt-3 flex flex-wrap gap-2"
+                        >
+
+                            <a
+                                href="/search?q=latest+AI+news"
+                                class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-400 transition hover:border-yellow-300/20 hover:text-white"
+                            >
+                                latest AI news
+                            </a>
+
+
+                            <a
+                                href="/search?q=learn+Python"
+                                class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-400 transition hover:border-cyan-300/20 hover:text-white"
+                            >
+                                learn Python
+                            </a>
+
+
+                            <a
+                                href="/search?q=best+recipes"
+                                class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-400 transition hover:border-yellow-300/20 hover:text-white"
+                            >
+                                best recipes
+                            </a>
+
+
+                            <a
+                                href="/search?q=how+the+internet+works"
+                                class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-400 transition hover:border-violet-300/20 hover:text-white"
+                            >
+                                how the internet works
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+
+                </aside>
+
+
+            </section>
+
+
+        {% elif query %}
+
+
+            <section
+                class="mt-8 max-w-2xl rounded-2xl border border-white/5 bg-white/[0.025] p-7"
+                aria-live="polite"
+            >
+
+
+                <div
+                    class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-300/10 text-xl text-yellow-200"
+                >
+                    ?
+                </div>
+
+
+                <h1
+                    class="text-xl font-semibold text-white"
+                >
+                    No results found
+                </h1>
+
+
+                <p
+                    class="mt-2 text-sm leading-6 text-slate-400"
+                >
+
+                    FyneApple couldn't find a web result for
+
+                    <span
+                        class="text-slate-200"
+                    >
+                        “{{ query }}”
+                    </span>.
+
+                    Try changing the wording or adding
+                    a little more context.
+
+                </p>
+
+
+                <a
+                    href="/"
+                    class="mt-5 inline-flex rounded-full bg-gradient-to-r from-yellow-300 to-orange-400 px-5 py-2.5 text-sm font-semibold text-slate-950"
+                >
+                    New Search
+                </a>
+
+
+            </section>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+    <footer
+        class="border-t border-white/5 px-5 py-5"
+    >
+
+        <div
+            class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-xs text-slate-600 sm:flex-row"
+        >
+
+            <span>
+                © 2026 FyneApple
+            </span>
+
+            <span>
+                Fresh web results · Local JSON fallback
+            </span>
+
+            <a
+                href="/"
+                class="text-yellow-300/70 hover:text-yellow-200"
+            >
+                Back home
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        const queryInput =
+            document.getElementById(
+                "query"
+            );
+
+
+        const focusButton =
+            document.getElementById(
+                "focus-button"
+            );
+
+
+        function focusSearch() {
+
+            queryInput.focus();
+
+            queryInput.select();
+
+        }
+
+
+        if (focusButton) {
+
+            focusButton.addEventListener(
+                "click",
+                focusSearch
+            );
+
+        }
+
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.key === "/" &&
+                    document.activeElement !== queryInput &&
+                    ![
+                        "INPUT",
+                        "TEXTAREA",
+                        "SELECT"
+                    ].includes(
+                        document.activeElement.tagName
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                    focusSearch();
+
+                }
+
+            }
+        );
+
+
+        queryInput.focus();
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="FyneApple — Search beyond limits."
+    >
+
+    <title>
+        FyneApple — Search Beyond Limits
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        fyne: {
+
+                            gold: "#FFD43B",
+
+                            orange: "#FF9F1C",
+
+                            violet: "#9B5DE5",
+
+                            cyan: "#00D9FF",
+
+                            green: "#5CE65C",
+
+                            night: "#070A18"
+
+                        }
+
+                    },
+
+                    boxShadow: {
+
+                        glow:
+                            "0 0 50px rgba(255, 212, 59, .20)",
+
+                        violet:
+                            "0 0 50px rgba(155, 93, 229, .18)"
+
+                    }
+
+                }
+
+            }
+
+        };
+
+    </script>
+
+
+    <style>
+
+        :root {
+
+            color-scheme: dark;
+
+        }
+
+
+        body {
+
+            background:
+
+                radial-gradient(
+                    circle at 10% 12%,
+                    rgba(255, 159, 28, .17),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 88% 14%,
+                    rgba(0, 217, 255, .12),
+                    transparent 26%
+                ),
+
+                radial-gradient(
+                    circle at 48% 90%,
+                    rgba(155, 93, 229, .18),
+                    transparent 35%
+                ),
+
+                #070A18;
+
+            overflow-x: hidden;
+
+        }
+
+
+        .ambient {
+
+            position: fixed;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            overflow: hidden;
+
+            z-index: 0;
+
+        }
+
+
+        .orb {
+
+            position: absolute;
+
+            border-radius: 9999px;
+
+            filter: blur(80px);
+
+            opacity: .30;
+
+            animation:
+                floatOrb
+                12s
+                ease-in-out
+                infinite
+                alternate;
+
+        }
+
+
+        .orb-one {
+
+            width: 300px;
+
+            height: 300px;
+
+            left: -70px;
+
+            top: 20%;
+
+            background: #FFB703;
+
+        }
+
+
+        .orb-two {
+
+            width: 350px;
+
+            height: 350px;
+
+            right: -100px;
+
+            top: 5%;
+
+            background: #00D9FF;
+
+            animation-delay: -3s;
+
+        }
+
+
+        .orb-three {
+
+            width: 380px;
+
+            height: 380px;
+
+            left: 38%;
+
+            bottom: -190px;
+
+            background: #9B5DE5;
+
+            animation-delay: -6s;
+
+        }
+
+
+        @keyframes floatOrb {
+
+            from {
+
+                transform:
+                    translate3d(
+                        0,
+                        0,
+                        0
+                    )
+                    scale(1);
+
+            }
+
+            to {
+
+                transform:
+                    translate3d(
+                        28px,
+                        -22px,
+                        0
+                    )
+                    scale(1.08);
+
+            }
+
+        }
+
+
+        .grid-glow {
+
+            background-image:
+
+                linear-gradient(
+                    rgba(255,255,255,.035)
+                    1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.035)
+                    1px,
+                    transparent 1px
+                );
+
+            background-size:
+                42px 42px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 78%
+                );
+
+        }
+
+
+        .glass {
+
+            background:
+                rgba(
+                    15,
+                    19,
+                    39,
+                    .68
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .08
+                );
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+        }
+
+
+        .search-shell {
+
+            background:
+
+                linear-gradient(
+                    rgba(10,14,30,.96),
+                    rgba(10,14,30,.96)
+                )
+                padding-box,
+
+                linear-gradient(
+                    100deg,
+                    #ffb703,
+                    #ffd43b,
+                    #00d9ff,
+                    #9b5de5
+                )
+                border-box;
+
+            border:
+                1px solid
+                transparent;
+
+            box-shadow:
+
+                0 0 0 1px
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .08
+                ),
+
+                0 20px 80px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .30
+                );
+
+        }
+
+
+        .logo-gradient {
+
+            background:
+
+                linear-gradient(
+                    100deg,
+                    #ffffff 5%,
+                    #fff176 40%,
+                    #ffd43b 60%,
+                    #ff9f1c 78%,
+                    #9b5de5 100%
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+        }
+
+
+        .feature-card {
+
+            transition:
+                transform .22s ease,
+                border-color .22s ease,
+                box-shadow .22s ease;
+
+        }
+
+
+        .feature-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .25
+                );
+
+            box-shadow:
+                0 20px 55px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .28
+                );
+
+        }
+
+
+        .topic-chip {
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                background .18s ease;
+
+        }
+
+
+        .topic-chip:hover {
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        .cursor-glow {
+
+            position: fixed;
+
+            width: 240px;
+
+            height: 240px;
+
+            border-radius: 9999px;
+
+            pointer-events: none;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
+
+            background:
+
+                radial-gradient(
+                    circle,
+                    rgba(
+                        255,
+                        212,
+                        59,
+                        .10
+                    ),
+                    transparent 68%
+                );
+
+            z-index: 1;
+
+            transition:
+                left .08s linear,
+                top .08s linear;
+
+        }
+
+
+        .soft-mode body {
+
+            background:
+
+                radial-gradient(
+                    circle at 20% 10%,
+                    rgba(
+                        255,
+                        212,
+                        59,
+                        .16
+                    ),
+                    transparent 35%
+                ),
+
+                #101528;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="min-h-screen text-white antialiased">
+
+
+    <div class="ambient">
+
+        <div class="orb orb-one"></div>
+
+        <div class="orb orb-two"></div>
+
+        <div class="orb orb-three"></div>
+
+        <div class="absolute inset-0 grid-glow"></div>
+
+    </div>
+
+
+    <div
+        id="cursor-glow"
+        class="cursor-glow hidden lg:block"
+    ></div>
+
+
+    <header
+        class="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 lg:px-8"
+    >
+
+
+        <a
+            href="/"
+            class="flex items-center gap-3"
+            aria-label="FyneApple home"
+        >
+
+            <svg
+                width="44"
+                height="44"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+
+                <defs>
+
+                    <linearGradient
+                        id="pine-logo"
+                        x1="8"
+                        y1="6"
+                        x2="41"
+                        y2="42"
+                        gradientUnits="userSpaceOnUse"
+                    >
+
+                        <stop
+                            stop-color="#FFF176"
+                        />
+
+                        <stop
+                            offset=".45"
+                            stop-color="#FFD43B"
+                        />
+
+                        <stop
+                            offset="1"
+                            stop-color="#FF8F00"
+                        />
+
+                    </linearGradient>
+
+
+                    <linearGradient
+                        id="leaf-logo"
+                        x1="15"
+                        y1="2"
+                        x2="34"
+                        y2="18"
+                        gradientUnits="userSpaceOnUse"
+                    >
+
+                        <stop
+                            stop-color="#B9FF6A"
+                        />
+
+                        <stop
+                            offset="1"
+                            stop-color="#39D353"
+                        />
+
+                    </linearGradient>
+
+                </defs>
+
+
+                <path
+                    d="M24 2C22 5 18 8 15 10L19 15C21 13 23 11 24 9C25 11 27 13 29 15L33 10C30 8 26 5 24 2Z"
+                    fill="url(#leaf-logo)"
+                />
+
+
+                <path
+                    d="M24 7C20 6 16 5 13 5C14 9 17 13 21 15L24 11V7Z"
+                    fill="#71E66D"
+                />
+
+
+                <path
+                    d="M24 7C28 6 32 5 35 5C34 9 31 13 27 15L24 11V7Z"
+                    fill="#49C957"
+                />
+
+
+                <path
+                    d="M24 13C17 13 11 19 11 28C11 37 16 44 24 46C32 44 37 37 37 28C37 19 31 13 24 13Z"
+                    fill="url(#pine-logo)"
+                />
+
+
+                <path
+                    d="M16 18L32 39M32 18L16 39M12.5 27H35.5M15 34H33"
+                    stroke="#A85B00"
+                    stroke-width="1.6"
+                    opacity=".72"
+                />
+
+            </svg>
+
+
+            <span
+                class="text-2xl font-extrabold tracking-tight"
+            >
+
+                Fyne<span class="logo-gradient">
+                    Apple
+                </span>
+
+            </span>
+
+        </a>
+
+
+        <div class="flex items-center gap-2">
+
+            <a
+                href="#features"
+                class="hidden rounded-full px-4 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white sm:block"
+            >
+                What makes it different?
+            </a>
+
+
+            <button
+                id="theme-button"
+                type="button"
+                class="glass rounded-full p-2.5 text-slate-200 transition hover:border-yellow-400/30"
+                aria-label="Toggle visual theme"
+                title="Toggle visual theme"
+            >
+                ☼
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main
+        class="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-6xl flex-col items-center px-5 pb-16 pt-10 lg:px-8"
+    >
+
+
+        <section
+            class="w-full max-w-4xl text-center"
+        >
+
+
+            <div
+                class="mb-7 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-300/5 px-4 py-2 text-xs font-medium tracking-wide text-yellow-200"
+            >
+
+                <span
+                    class="inline-block h-2 w-2 animate-pulse rounded-full bg-yellow-300"
+                ></span>
+
+                LIVE WEB SEARCH
+
+            </div>
+
+
+            <div class="mb-6 flex justify-center">
+
+                <div class="relative">
+
+                    <div
+                        class="absolute -inset-10 rounded-full bg-yellow-400/10 blur-3xl"
+                    ></div>
+
+
+                    <svg
+                        width="120"
+                        height="120"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="relative drop-shadow-[0_0_28px_rgba(255,212,59,.38)]"
+                        aria-hidden="true"
+                    >
+
+                        <defs>
+
+                            <linearGradient
+                                id="hero-pine"
+                                x1="8"
+                                y1="6"
+                                x2="39"
+                                y2="43"
+                                gradientUnits="userSpaceOnUse"
+                            >
+
+                                <stop
+                                    stop-color="#FFF59D"
+                                />
+
+                                <stop
+                                    offset=".42"
+                                    stop-color="#FFD43B"
+                                />
+
+                                <stop
+                                    offset="1"
+                                    stop-color="#FF8F00"
+                                />
+
+                            </linearGradient>
+
+
+                            <linearGradient
+                                id="hero-leaf"
+                                x1="14"
+                                y1="3"
+                                x2="33"
+                                y2="18"
+                                gradientUnits="userSpaceOnUse"
+                            >
+
+                                <stop
+                                    stop-color="#B9FF6A"
+                                />
+
+                                <stop
+                                    offset="1"
+                                    stop-color="#24C96B"
+                                />
+
+                            </linearGradient>
+
+                        </defs>
+
+
+                        <path
+                            d="M24 2C22 5 18 8 15 10L19 15C21 13 23 11 24 9C25 11 27 13 29 15L33 10C30 8 26 5 24 2Z"
+                            fill="url(#hero-leaf)"
+                        />
+
+
+                        <path
+                            d="M24 7C20 6 16 5 13 5C14 9 17 13 21 15L24 11V7Z"
+                            fill="#71E66D"
+                        />
+
+
+                        <path
+                            d="M24 7C28 6 32 5 35 5C34 9 31 13 27 15L24 11V7Z"
+                            fill="#49C957"
+                        />
+
+
+                        <path
+                            d="M24 13C17 13 11 19 11 28C11 37 16 44 24 46C32 44 37 37 37 28C37 19 31 13 24 13Z"
+                            fill="url(#hero-pine)"
+                        />
+
+
+                        <path
+                            d="M16 18L32 39M32 18L16 39M12.5 27H35.5M15 34H33"
+                            stroke="#A85B00"
+                            stroke-width="1.6"
+                            opacity=".72"
+                        />
+
+                    </svg>
+
+                </div>
+
+            </div>
+
+
+            <h1
+                class="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl"
+            >
+
+                <span class="text-white">
+                    Fyne
+                </span>
+
+                <span class="logo-gradient">
+                    Apple
+                </span>
+
+            </h1>
+
+
+            <p
+                class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg"
+            >
+                Search beyond limits.
+                Fast live results,
+                a radiant interface,
+                and a little personality.
+            </p>
+
+
+            <form
+                id="search-form"
+                action="/search"
+                method="get"
+                role="search"
+                class="mx-auto mt-9 w-full max-w-3xl"
+            >
+
+
+                <div
+                    class="search-shell flex items-center rounded-full p-1.5 overflow-hidden"
+                >
+
+
+                    <svg
+                        class="ml-5 h-5 w-5 shrink-0 text-slate-400"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        aria-hidden="true"
+                    >
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        ></circle>
+
+                        <path
+                            d="m20 20-3.5-3.5"
+                        ></path>
+
+                    </svg>
+
+
+                    <input
+                        id="query"
+                        name="q"
+                        type="search"
+                        maxlength="300"
+                        autocomplete="off"
+                        autofocus
+                        class="min-w-0 flex-1 bg-transparent px-4 py-4 text-base text-white outline-none placeholder:text-slate-500 sm:text-lg"
+                        placeholder="Search anything..."
+                        aria-label="Search anything"
+                    >
+
+
+                    <button
+                        id="voice-button"
+                        type="button"
+                        class="hidden rounded-full p-3 text-slate-300 transition hover:bg-white/5 hover:text-white sm:block"
+                        aria-label="Voice search"
+                        title="Voice search"
+                    >
+
+                        <svg
+                            class="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            aria-hidden="true"
+                        >
+
+                            <rect
+                                x="9"
+                                y="3"
+                                width="6"
+                                height="11"
+                                rx="3"
+                            ></rect>
+
+                            <path
+                                d="M5 11a7 7 0 0 0 14 0"
+                            ></path>
+
+                            <path
+                                d="M12 18v3"
+                            ></path>
+
+                            <path
+                                d="M8 21h8"
+                            ></path>
+
+                        </svg>
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                       class="group mr-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 shadow-lg shadow-yellow-500/20 transition hover:scale-105"
+                        aria-label="Search"
+                    >
+
+                        <svg
+                            class="h-5 w-5 transition group-hover:translate-x-0.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.3"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                            ></circle>
+
+                            <path
+                                d="m20 20-3.5-3.5"
+                            ></path>
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="mt-5 flex flex-wrap justify-center gap-3"
+                >
+
+                    <button
+                        type="submit"
+                        class="rounded-full bg-gradient-to-r from-yellow-300 to-orange-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-yellow-500/15 transition hover:-translate-y-0.5"
+                    >
+                        Fyne Search
+                    </button>
+
+
+                    <button
+                        id="curious-button"
+                        type="button"
+                        class="rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-slate-200 transition hover:-translate-y-0.5 hover:border-violet-300/30"
+                    >
+                        I'm Feeling Curious
+                    </button>
+
+                </div>
+
+
+            </form>
+
+
+            <div
+                class="mt-6 flex flex-wrap justify-center gap-2"
+            >
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-yellow-300/30 hover:bg-yellow-300/5 hover:text-yellow-100"
+                    data-query="AI"
+                >
+                    ✦ AI
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-cyan-300/30 hover:bg-cyan-300/5 hover:text-cyan-100"
+                    data-query="coding"
+                >
+                    <> Coding
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-yellow-300/30 hover:bg-yellow-300/5 hover:text-yellow-100"
+                    data-query="technology"
+                >
+                    ◈ Tech
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-pink-300/30 hover:bg-pink-300/5 hover:text-pink-100"
+                    data-query="recipes"
+                >
+                    ◉ Recipes
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-green-300/30 hover:bg-green-300/5 hover:text-green-100"
+                    data-query="football"
+                >
+                    ◇ Football
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-violet-300/30 hover:bg-violet-300/5 hover:text-violet-100"
+                    data-query="science"
+                >
+                    ⌁ Science
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-orange-300/30 hover:bg-orange-300/5 hover:text-orange-100"
+                    data-query="history"
+                >
+                    ◌ History
+                </button>
+
+
+                <button
+                    type="button"
+                    class="topic-chip rounded-full border border-white/10 bg-white/[0.025] px-3.5 py-2 text-xs text-slate-400 hover:border-teal-300/30 hover:bg-teal-300/5 hover:text-teal-100"
+                    data-query="travel"
+                >
+                    ⌂ Travel
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+        <section
+            id="features"
+            class="mt-14 grid w-full max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+
+
+            <article
+                class="feature-card glass rounded-2xl p-5"
+            >
+
+                <div
+                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-400/10 text-lg text-fuchsia-300"
+                >
+                    ✦
+                </div>
+
+                <h2 class="font-semibold">
+                    FyneSpark
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-400">
+                    Lightweight relevance boosts help move closely matching results toward the top.
+                </p>
+
+            </article>
+
+
+            <article
+                class="feature-card glass rounded-2xl p-5"
+            >
+
+                <div
+                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/10 text-lg text-cyan-300"
+                >
+                    ↯
+                </div>
+
+                <h2 class="font-semibold">
+                    Live Web
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-400">
+                    Search the public web instead of being restricted to the original five-page mock database.
+                </p>
+
+            </article>
+
+
+            <article
+                class="feature-card glass rounded-2xl p-5"
+            >
+
+                <div
+                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-300/10 text-lg text-yellow-200"
+                >
+                    ◈
+                </div>
+
+                <h2 class="font-semibold">
+                    Radiant UI
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-400">
+                    Animated lighting, glass surfaces, gradients, and a custom pineapple identity.
+                </p>
+
+            </article>
+
+
+            <article
+                class="feature-card glass rounded-2xl p-5"
+            >
+
+                <div
+                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-400/10 text-lg text-green-300"
+                >
+                    /
+                </div>
+
+                <h2 class="font-semibold">
+                    Keyboard Ready
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-400">
+                    Press
+                    <kbd class="rounded border border-white/10 px-1.5 py-0.5 text-[11px]">
+                        /
+                    </kbd>
+                    to instantly focus search.
+                </p>
+
+            </article>
+
+
+        </section>
+
+
+        <div
+            class="mt-10 text-center text-sm italic text-slate-500"
+        >
+
+            “Knowledge is the sweetest fruit.”
+
+            <span
+                class="not-italic text-yellow-300"
+            >
+                — FyneApple
+            </span>
+
+        </div>
+
+
+    </main>
+
+
+    <footer
+        class="relative z-10 border-t border-white/5 px-5 py-5"
+    >
+
+        <div
+            class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-xs text-slate-500 sm:flex-row"
+        >
+
+            <span>
+                © 2026 FyneApple
+            </span>
+
+            <span>
+                Flask · Tailwind CSS · Vanilla JavaScript
+            </span>
+
+            <span>
+                Search smart. Stay curious.
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        const queryInput =
+            document.getElementById(
+                "query"
+            );
+
+
+        const form =
+            document.getElementById(
+                "search-form"
+            );
+
+
+        const curiousButton =
+            document.getElementById(
+                "curious-button"
+            );
+
+
+        const voiceButton =
+            document.getElementById(
+                "voice-button"
+            );
+
+
+        const themeButton =
+            document.getElementById(
+                "theme-button"
+            );
+
+
+        const cursorGlow =
+            document.getElementById(
+                "cursor-glow"
+            );
+
+
+        const curiousQueries = [
+
+            "how did the internet start",
+
+            "how do neural networks work",
+
+            "best programming languages to learn",
+
+            "how does quantum computing work",
+
+            "Cristiano Ronaldo",
+
+            "how to learn DSA",
+
+            "history of smartphones",
+
+            "why is the sky blue",
+
+            "best places to visit in India",
+
+            "easy high protein recipes",
+
+            "what is artificial intelligence",
+
+            "how does GPS work"
+
+        ];
+
+
+        document
+            .querySelectorAll(".topic-chip")
+            .forEach(
+                (chip) => {
+
+                    chip.addEventListener(
+                        "click",
+                        () => {
+
+                            queryInput.value =
+                                chip.dataset.query;
+
+                            form.submit();
+
+                        }
+                    );
+
+                }
+            );
+
+
+        curiousButton.addEventListener(
+            "click",
+            () => {
+
+                const selected =
+                    curiousQueries[
+                        Math.floor(
+                            Math.random()
+                            *
+                            curiousQueries.length
+                        )
+                    ];
+
+                queryInput.value =
+                    selected;
+
+                form.submit();
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.key === "/" &&
+                    document.activeElement !== queryInput &&
+                    ![
+                        "INPUT",
+                        "TEXTAREA",
+                        "SELECT"
+                    ].includes(
+                        document.activeElement.tagName
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                    queryInput.focus();
+
+                    queryInput.select();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "mousemove",
+            (event) => {
+
+                if (!cursorGlow) {
+                    return;
+                }
+
+                cursorGlow.style.left =
+                    `${event.clientX}px`;
+
+                cursorGlow.style.top =
+                    `${event.clientY}px`;
+
+            }
+        );
+
+
+        themeButton.addEventListener(
+            "click",
+            () => {
+
+                document.body.classList.toggle(
+                    "brightness-[1.18]"
+                );
+
+            }
+        );
+
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+
+        if (SpeechRecognition) {
+
+            const recognition =
+                new SpeechRecognition();
+
+            recognition.lang =
+                "en-IN";
+
+            recognition.interimResults =
+                false;
+
+            recognition.maxAlternatives =
+                1;
+
+
+            voiceButton.addEventListener(
+                "click",
+                () => {
+
+                    try {
+
+                        recognition.start();
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Voice recognition could not start.",
+                            error
+                        );
+
+                    }
+
+                }
+            );
+
+
+            recognition.addEventListener(
+                "result",
+                (event) => {
+
+                    const transcript =
+                        event.results[0][0]
+                            .transcript;
+
+                    queryInput.value =
+                        transcript;
+
+                    form.submit();
+
+                }
+            );
+
+
+        } else {
+
+            voiceButton.title =
+                "Voice search is not supported by this browser.";
+
+        }
+
+
+        queryInput.focus();
+
+    </script>
+
+
+</body>
+
+</html>
