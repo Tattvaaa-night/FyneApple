@@ -149,11 +149,75 @@
         }
 
 
+        .shine {
+
+            background:
+
+                linear-gradient(
+                    100deg,
+                    #FFFFFF 8%,
+                    #FFF176 42%,
+                    #FFD43B 60%,
+                    #FF9F1C 78%,
+                    #9B5DE5 100%
+                );
+
+            -webkit-background-clip:
+                text;
+
+            background-clip:
+                text;
+
+            color:
+                transparent;
+
+        }
+
+
+        .search-shell {
+
+            background:
+
+                linear-gradient(
+                    rgba(
+                        11,
+                        15,
+                        31,
+                        .96
+                    ),
+                    rgba(
+                        11,
+                        15,
+                        31,
+                        .96
+                    )
+                )
+                padding-box,
+
+                linear-gradient(
+                    100deg,
+                    #FFB703,
+                    #FFD43B,
+                    #00D9FF,
+                    #9B5DE5
+                )
+                border-box;
+
+            border:
+                1px solid
+                transparent;
+
+        }
+
+
         .result-card {
 
             transition:
+
                 transform .18s ease,
+
                 border-color .18s ease,
+
                 background .18s ease;
 
         }
@@ -183,60 +247,171 @@
         }
 
 
-        .shine {
+        .truncate-url {
 
-            background:
+            white-space:
+                nowrap;
 
-                linear-gradient(
-                    100deg,
-                    #ffffff 8%,
-                    #fff176 42%,
-                    #ffd43b 60%,
-                    #ff9f1c 78%,
-                    #9b5de5 100%
-                );
+            overflow:
+                hidden;
 
-            -webkit-background-clip: text;
-
-            background-clip: text;
-
-            color: transparent;
+            text-overflow:
+                ellipsis;
 
         }
 
 
-        .search-shell {
+        .fyne-suggestions {
+
+            animation:
+                suggestionIn
+                .16s
+                ease-out;
+
+        }
+
+
+        @keyframes suggestionIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-6px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        .fyne-suggestion-item {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                12px
+                13px;
+
+            border-radius:
+                13px;
+
+            text-align:
+                left;
+
+            color:
+                #CBD5E1;
+
+            background:
+                transparent;
+
+            transition:
+                background .15s ease,
+                color .15s ease,
+                transform .15s ease;
+
+        }
+
+
+        .fyne-suggestion-item:hover {
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .06
+                );
+
+            color:
+                #FFFFFF;
+
+            transform:
+                translateX(2px);
+
+        }
+
+
+        .fyne-suggestion-icon {
+
+            width: 30px;
+
+            height: 30px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius:
+                10px;
 
             background:
 
                 linear-gradient(
+                    135deg,
                     rgba(
-                        11,
-                        15,
-                        31,
-                        .96
+                        255,
+                        212,
+                        59,
+                        .12
                     ),
                     rgba(
-                        11,
-                        15,
-                        31,
-                        .96
+                        155,
+                        93,
+                        229,
+                        .12
                     )
-                )
-                padding-box,
+                );
 
-                linear-gradient(
-                    100deg,
-                    #ffb703,
-                    #ffd43b,
-                    #00d9ff,
-                    #9b5de5
-                )
-                border-box;
+            color:
+                #FFD43B;
 
-            border:
-                1px solid
-                transparent;
+        }
+
+
+        .fyne-suggestion-text {
+
+            min-width: 0;
+
+            flex: 1;
+
+            overflow: hidden;
+
+            white-space:
+                nowrap;
+
+            text-overflow:
+                ellipsis;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .fyne-suggestion-arrow {
+
+            color:
+                #64748B;
 
         }
 
@@ -257,7 +432,8 @@
             0%,
             100% {
 
-                opacity: .45;
+                opacity:
+                    .45;
 
                 transform:
                     scale(.9);
@@ -266,7 +442,8 @@
 
             50% {
 
-                opacity: 1;
+                opacity:
+                    1;
 
                 transform:
                     scale(1.1);
@@ -276,16 +453,474 @@
         }
 
 
-        .truncate-url {
+        .pixellet-3d {
 
-            white-space:
-                nowrap;
+            position:
+                relative;
+
+            width:
+                156px;
+
+            height:
+                190px;
+
+            perspective:
+                700px;
+
+        }
+
+
+        .pixellet-glow {
+
+            position:
+                absolute;
+
+            left:
+                22px;
+
+            top:
+                8px;
+
+            width:
+                112px;
+
+            height:
+                112px;
+
+            border-radius:
+                9999px;
+
+            background:
+
+                radial-gradient(
+                    circle,
+                    rgba(
+                        255,
+                        212,
+                        59,
+                        .30
+                    ),
+                    transparent 68%
+                );
+
+            filter:
+                blur(18px);
+
+            animation:
+
+                pixelletGlow
+                2.8s
+                ease-in-out
+                infinite
+                alternate;
+
+        }
+
+
+        @keyframes pixelletGlow {
+
+            from {
+
+                opacity:
+                    .45;
+
+                transform:
+                    scale(.92);
+
+            }
+
+            to {
+
+                opacity:
+                    .85;
+
+                transform:
+                    scale(1.08);
+
+            }
+
+        }
+
+
+        .pixellet-card {
+
+            position:
+                absolute;
+
+            left:
+                24px;
+
+            top:
+                10px;
+
+            width:
+                96px;
+
+            height:
+                96px;
+
+            transform-style:
+                preserve-3d;
+
+            animation:
+
+                pixelletFloat
+                3.6s
+                ease-in-out
+                infinite;
+
+        }
+
+
+        @keyframes pixelletFloat {
+
+            0%,
+            100% {
+
+                transform:
+
+                    translateY(0)
+
+                    rotateX(5deg)
+
+                    rotateY(-10deg);
+
+            }
+
+            50% {
+
+                transform:
+
+                    translateY(-10px)
+
+                    rotateX(-5deg)
+
+                    rotateY(10deg);
+
+            }
+
+        }
+
+
+        .pixellet-face {
+
+            position:
+                absolute;
+
+            inset:
+                0;
 
             overflow:
                 hidden;
 
+            border-radius:
+                18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #202A50,
+                    #0A1023
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .50
+                );
+
+            box-shadow:
+
+                0 0 30px
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .18
+                );
+
+            transform:
+                translateZ(12px);
+
+        }
+
+
+        #pixellet-canvas {
+
+            display:
+                block;
+
+            width:
+                96px;
+
+            height:
+                96px;
+
+            image-rendering:
+                pixelated;
+
+            image-rendering:
+                crisp-edges;
+
+        }
+
+
+        .pixellet-grid {
+
+            position:
+                absolute;
+
+            inset:
+                0;
+
+            pointer-events:
+                none;
+
+            background:
+
+                linear-gradient(
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .065
+                    )
+                    1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .065
+                    )
+                    1px,
+                    transparent 1px
+                );
+
+            background-size:
+                6px 6px;
+
+            mix-blend-mode:
+                screen;
+
+        }
+
+
+        .pixellet-side {
+
+            position:
+                absolute;
+
+            top:
+                7px;
+
+            right:
+                -12px;
+
+            width:
+                12px;
+
+            height:
+                96px;
+
+            border-radius:
+                0 13px 13px 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #644911,
+                    #211907
+                );
+
+            transform:
+
+                rotateY(90deg)
+
+                translateZ(84px);
+
+            transform-origin:
+                left center;
+
+        }
+
+
+        .pixellet-bottom {
+
+            position:
+                absolute;
+
+            left:
+                7px;
+
+            bottom:
+                -12px;
+
+            width:
+                96px;
+
+            height:
+                12px;
+
+            border-radius:
+                0 0 13px 13px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #52390E,
+                    #171207
+                );
+
+            transform:
+
+                rotateX(-90deg)
+
+                translateZ(84px);
+
+            transform-origin:
+                center top;
+
+        }
+
+
+        .pixellet-info {
+
+            position:
+                absolute;
+
+            left:
+                0;
+
+            right:
+                0;
+
+            bottom:
+                0;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            align-items:
+                center;
+
+            gap:
+                2px;
+
+            padding:
+                8px 5px;
+
+            border-radius:
+                13px;
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .08
+                );
+
+            background:
+                rgba(
+                    7,
+                    10,
+                    24,
+                    .80
+                );
+
+            backdrop-filter:
+                blur(13px);
+
+        }
+
+
+        .pixellet-caption {
+
+            font-size:
+                8px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                .20em;
+
+            color:
+                #FFD43B;
+
+        }
+
+
+        .pixellet-query {
+
+            max-width:
+                132px;
+
+            overflow:
+                hidden;
+
+            white-space:
+                nowrap;
+
             text-overflow:
                 ellipsis;
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+
+            color:
+                #F8FAFC;
+
+        }
+
+
+        .pixellet-source {
+
+            font-size:
+                8px;
+
+            color:
+                #64748B;
+
+        }
+
+
+        @media (max-width: 640px) {
+
+            #pixellet {
+
+                right:
+                    10px;
+
+                bottom:
+                    10px;
+
+            }
+
+            .pixellet-3d {
+
+                transform:
+                    scale(.80);
+
+                transform-origin:
+                    bottom right;
+
+            }
 
         }
 
@@ -430,70 +1065,27 @@
                 <form
                     action="/search"
                     method="get"
-                    class="w-full md:max-w-3xl"
                     role="search"
+                    class="w-full md:max-w-3xl"
                 >
 
 
-                    <label
-                        for="query"
-                        class="sr-only"
-                    >
-                        Search the web
-                    </label>
-
-
                     <div
-                        class="search-shell flex items-center rounded-2xl p-1"
+                        class="relative"
                     >
 
 
-                        <svg
-                            class="ml-4 h-5 w-5 shrink-0 text-slate-400"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            aria-hidden="true"
+                        <div
+                            class="search-shell flex items-center rounded-full overflow-hidden p-1"
                         >
 
-                            <circle
-                                cx="11"
-                                cy="11"
-                                r="7"
-                            ></circle>
-
-                            <path
-                                d="m20 20-3.5-3.5"
-                            ></path>
-
-                        </svg>
-
-
-                        <input
-                            id="query"
-                            name="q"
-                            type="search"
-                            maxlength="300"
-                            autocomplete="off"
-                            value="{{ query }}"
-                            class="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500"
-                            placeholder="Search anything..."
-                        >
-
-
-                        <button
-                            type="submit"
-                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 transition hover:scale-105"
-                            aria-label="Search"
-                        >
 
                             <svg
-                                class="h-4 w-4"
+                                class="ml-4 h-5 w-5 shrink-0 text-slate-400"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-width="2.4"
+                                stroke-width="2"
                                 aria-hidden="true"
                             >
 
@@ -509,7 +1101,57 @@
 
                             </svg>
 
-                        </button>
+
+                            <input
+                                id="query"
+                                name="q"
+                                type="search"
+                                maxlength="300"
+                                autocomplete="off"
+                                value="{{ query }}"
+                                class="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500"
+                                placeholder="Search anything..."
+                            >
+
+
+                            <button
+                                type="submit"
+                                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 transition hover:scale-105"
+                                aria-label="Search"
+                            >
+
+                                <svg
+                                    class="h-4 w-4"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2.4"
+                                    aria-hidden="true"
+                                >
+
+                                    <circle
+                                        cx="11"
+                                        cy="11"
+                                        r="7"
+                                    ></circle>
+
+                                    <path
+                                        d="m20 20-3.5-3.5"
+                                    ></path>
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="fyne-suggestions hidden absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#0D1225]/95 p-2 shadow-2xl backdrop-blur-xl"
+                            role="listbox"
+                            aria-label="Search suggestions"
+                        ></div>
+
 
                     </div>
 
@@ -614,7 +1256,6 @@
 
             {% endif %}
 
-
         {% else %}
 
             <div
@@ -699,12 +1340,9 @@
 
                                     </p>
 
-
                                 </div>
 
-
                             </div>
-
 
                         </article>
 
@@ -744,9 +1382,9 @@
                             class="mt-2 text-sm leading-6 text-slate-400"
                         >
 
-                            FyneApple searches the live public web and then
-                            applies a lightweight relevance pass to help
-                            important query matches stand out.
+                            FyneApple searches the live public web,
+                            then applies a lightweight relevance pass
+                            to your result set.
 
                         </p>
 
@@ -850,6 +1488,7 @@
                             class="mt-3 flex flex-wrap gap-2"
                         >
 
+
                             <a
                                 href="/search?q=latest+AI+news"
                                 class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-400 transition hover:border-yellow-300/20 hover:text-white"
@@ -883,9 +1522,7 @@
 
                         </div>
 
-
                     </div>
-
 
                 </aside>
 
@@ -928,8 +1565,8 @@
                         “{{ query }}”
                     </span>.
 
-                    Try changing the wording or adding
-                    a little more context.
+                    Try changing the wording
+                    or adding more context.
 
                 </p>
 
@@ -951,6 +1588,86 @@
     </main>
 
 
+    <div
+        id="pixellet"
+        data-query="{{ query }}"
+        class="hidden fixed bottom-6 right-6 z-[100]"
+    >
+
+        <div
+            class="pixellet-3d"
+        >
+
+            <div
+                class="pixellet-glow"
+            ></div>
+
+
+            <div
+                class="pixellet-card"
+            >
+
+                <div
+                    class="pixellet-face"
+                >
+
+                    <canvas
+                        id="pixellet-canvas"
+                        width="48"
+                        height="48"
+                    ></canvas>
+
+
+                    <div
+                        class="pixellet-grid"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    class="pixellet-side"
+                ></div>
+
+
+                <div
+                    class="pixellet-bottom"
+                ></div>
+
+            </div>
+
+
+            <div
+                class="pixellet-info"
+            >
+
+                <span
+                    class="pixellet-caption"
+                >
+                    FYNELET
+                </span>
+
+
+                <span
+                    id="pixellet-query"
+                    class="pixellet-query"
+                ></span>
+
+
+                <span
+                    id="pixellet-source"
+                    class="pixellet-source"
+                >
+                    finding image...
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <footer
         class="border-t border-white/5 px-5 py-5"
     >
@@ -963,9 +1680,11 @@
                 © 2026 FyneApple
             </span>
 
+
             <span>
-                Fresh web results · Local JSON fallback
+                Fresh web results · Fynelets
             </span>
+
 
             <a
                 href="/"
@@ -979,69 +1698,7 @@
     </footer>
 
 
-    <script>
-
-        const queryInput =
-            document.getElementById(
-                "query"
-            );
-
-
-        const focusButton =
-            document.getElementById(
-                "focus-button"
-            );
-
-
-        function focusSearch() {
-
-            queryInput.focus();
-
-            queryInput.select();
-
-        }
-
-
-        if (focusButton) {
-
-            focusButton.addEventListener(
-                "click",
-                focusSearch
-            );
-
-        }
-
-
-        document.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.key === "/" &&
-                    document.activeElement !== queryInput &&
-                    ![
-                        "INPUT",
-                        "TEXTAREA",
-                        "SELECT"
-                    ].includes(
-                        document.activeElement.tagName
-                    )
-                ) {
-
-                    event.preventDefault();
-
-                    focusSearch();
-
-                }
-
-            }
-        );
-
-
-        queryInput.focus();
-
-    </script>
-
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 
 </body>
 

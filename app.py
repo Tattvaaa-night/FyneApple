@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 import re
 import threading
@@ -7,9 +8,10 @@ import time
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
+from urllib.request import Request, urlopen
 
 from ddgs import DDGS
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,41 +19,70 @@ DATA_FILE = BASE_DIR / "data.json"
 
 app = Flask(__name__)
 
+
 MAX_QUERY_LENGTH = 300
 MAX_RESULTS = 10
+
 SEARCH_TIMEOUT_SECONDS = 8
+
+IMAGE_TIMEOUT_SECONDS = 6
+
 CACHE_TTL_SECONDS = 120
 
 
-_search_cache: dict[str, tuple[float, list[dict[str, Any]]]] = {}
+_search_cache: dict[
+    str,
+    tuple[
+        float,
+        list[dict[str, Any]]
+    ]
+] = {}
+
+
 _cache_lock = threading.Lock()
 
 
 def load_local_index() -> list[dict[str, str]]:
     """
-    Load the local JSON index when the application starts.
+    Load the local JSON search index when the server starts.
 
-    The JSON index is used as a fallback if the live web search service
-    cannot be reached.
+    The local index is used as a fallback when live web search
+    cannot return results.
     """
+
     try:
-        with DATA_FILE.open("r", encoding="utf-8") as file:
-            documents = json.load(file)
+
+        with DATA_FILE.open(
+            "r",
+            encoding="utf-8"
+        ) as file:
+
+            documents = json.load(
+                file
+            )
 
     except FileNotFoundError as exc:
+
         raise RuntimeError(
-            f"Could not find the search index: {DATA_FILE}"
+            f"Could not find data.json at {DATA_FILE}"
         ) from exc
 
     except json.JSONDecodeError as exc:
+
         raise RuntimeError(
-            f"data.json contains invalid JSON: {DATA_FILE}"
+            "data.json contains invalid JSON."
         ) from exc
 
-    if not isinstance(documents, list):
+
+    if not isinstance(
+        documents,
+        list
+    ):
+
         raise RuntimeError(
             "data.json must contain a JSON array."
         )
+
 
     required_fields = {
         "title",
@@ -60,33 +91,58 @@ def load_local_index() -> list[dict[str, str]]:
         "content",
     }
 
-    cleaned_documents: list[dict[str, str]] = []
 
-    for position, document in enumerate(documents):
+    cleaned_documents: list[
+        dict[str, str]
+    ] = []
 
-        if not isinstance(document, dict):
+
+    for position, document in enumerate(
+        documents
+    ):
+
+        if not isinstance(
+            document,
+            dict
+        ):
+
             raise RuntimeError(
-                f"Document {position} is not a JSON object."
+                f"Document {position} is not an object."
             )
 
-        missing_fields = required_fields - set(document.keys())
+
+        missing_fields = (
+            required_fields
+            - set(document.keys())
+        )
+
 
         if missing_fields:
+
             missing_text = ", ".join(
-                sorted(missing_fields)
+                sorted(
+                    missing_fields
+                )
             )
 
             raise RuntimeError(
-                f"Document {position} is missing: {missing_text}"
+                f"Document {position} is missing: "
+                f"{missing_text}"
             )
+
 
         for field in required_fields:
 
-            if not isinstance(document[field], str):
+            if not isinstance(
+                document[field],
+                str
+            ):
+
                 raise RuntimeError(
-                    f"Document {position} field '{field}' "
-                    "must contain a string."
+                    f"Document {position} field "
+                    f"'{field}' must be a string."
                 )
+
 
         cleaned_documents.append(
             {
@@ -97,31 +153,39 @@ def load_local_index() -> list[dict[str, str]]:
             }
         )
 
+
     return cleaned_documents
 
 
 LOCAL_INDEX = load_local_index()
 
 
-def tokenize(text: str) -> list[str]:
+def tokenize(
+    text: str
+) -> list[str]:
     """
-    Turn text into lowercase searchable words.
+    Convert text into lowercase searchable tokens.
     """
+
     return re.findall(
         r"[a-z0-9]+",
         text.lower()
     )
 
 
-def clean_query(raw_query: str) -> str:
+def clean_query(
+    raw_query: str
+) -> str:
     """
-    Clean user input and prevent unnecessarily large requests.
+    Normalize whitespace and remove control characters.
     """
+
     normalized = re.sub(
         r"[\x00-\x1f\x7f]",
         " ",
         raw_query
     )
+
 
     normalized = re.sub(
         r"\s+",
@@ -129,28 +193,42 @@ def clean_query(raw_query: str) -> str:
         normalized
     ).strip()
 
-    return normalized[:MAX_QUERY_LENGTH]
+
+    return normalized[
+        :MAX_QUERY_LENGTH
+    ]
 
 
-def safe_http_url(url: str) -> str | None:
+def safe_http_url(
+    url: str
+) -> str | None:
     """
-    Only allow HTTP and HTTPS result URLs.
+    Only permit HTTP and HTTPS URLs.
     """
+
     try:
+
         parsed = urlsplit(
             url.strip()
         )
+
     except ValueError:
+
         return None
+
 
     if parsed.scheme.lower() not in {
         "http",
         "https",
     }:
+
         return None
 
+
     if not parsed.netloc:
+
         return None
+
 
     return urlunsplit(
         (
@@ -163,29 +241,46 @@ def safe_http_url(url: str) -> str | None:
     )
 
 
-def display_url(url: str) -> str:
+def display_url(
+    url: str
+) -> str:
     """
-    Convert a full URL into a compact display version.
+    Produce a clean URL label for the UI.
     """
-    safe_url = safe_http_url(url)
 
-    if safe_url is None:
+    safe_url = safe_http_url(
+        url
+    )
+
+
+    if not safe_url:
+
         return ""
+
 
     parsed = urlsplit(
         safe_url
     )
 
-    host = parsed.netloc.removeprefix(
+
+    hostname = parsed.netloc.removeprefix(
         "www."
     )
 
-    path = parsed.path.rstrip("/")
+
+    path = parsed.path.rstrip(
+        "/"
+    )
+
 
     if path:
-        return f"{host}{path}"
 
-    return host
+        return (
+            f"{hostname}{path}"
+        )
+
+
+    return hostname
 
 
 def local_score(
@@ -193,42 +288,41 @@ def local_score(
     document: dict[str, str]
 ) -> int:
     """
-    Score local fallback documents.
-
-    Title:
-        weight 7
-
-    URL:
-        weight 4
-
-    Snippet:
-        weight 3
-
-    Content:
-        weight 1
+    Weighted keyword scoring for the JSON fallback index.
     """
-    field_weights = {
+
+    weights = {
         "title": 7,
         "url": 4,
         "snippet": 3,
         "content": 1,
     }
 
+
     score = 0
+
 
     for word in query_words:
 
-        for field_name, weight in field_weights.items():
+        for field, weight in weights.items():
 
             field_words = tokenize(
-                document[field_name]
+                document[field]
             )
 
-            occurrences = field_words.count(
-                word
+
+            occurrences = (
+                field_words.count(
+                    word
+                )
             )
 
-            score += occurrences * weight
+
+            score += (
+                occurrences
+                * weight
+            )
+
 
     return score
 
@@ -237,16 +331,23 @@ def search_local(
     query: str
 ) -> list[dict[str, Any]]:
     """
-    Search the local JSON fallback index.
+    Search the JSON fallback index.
     """
+
     query_words = tokenize(
         query
     )
 
+
     if not query_words:
+
         return []
 
-    matches: list[dict[str, Any]] = []
+
+    results: list[
+        dict[str, Any]
+    ] = []
+
 
     for position, document in enumerate(
         LOCAL_INDEX
@@ -257,10 +358,13 @@ def search_local(
             document
         )
 
+
         if score <= 0:
+
             continue
 
-        matches.append(
+
+        results.append(
             {
                 "title": document["title"],
                 "url": safe_http_url(
@@ -275,29 +379,35 @@ def search_local(
             }
         )
 
-    matches.sort(
+
+    results.sort(
         key=lambda result: (
             -result["score"],
             result["_position"],
         )
     )
 
-    for result in matches:
+
+    for result in results:
+
         result.pop(
             "_position",
             None
         )
 
-    return matches
+
+    return results
 
 
 def get_cached(
     query: str
 ) -> list[dict[str, Any]] | None:
     """
-    Return a cached response when it is still fresh.
+    Retrieve a fresh cached search response.
     """
+
     now = time.monotonic()
+
 
     with _cache_lock:
 
@@ -305,21 +415,27 @@ def get_cached(
             query
         )
 
+
         if cached is None:
+
             return None
 
-        timestamp, results = cached
+
+        created_at, results = cached
+
 
         if (
-            now - timestamp
+            now - created_at
             > CACHE_TTL_SECONDS
         ):
+
             _search_cache.pop(
                 query,
                 None
             )
 
             return None
+
 
         return [
             dict(result)
@@ -332,8 +448,9 @@ def set_cached(
     results: list[dict[str, Any]]
 ) -> None:
     """
-    Store a short-lived cached response.
+    Store a short-lived search response.
     """
+
     with _cache_lock:
 
         _search_cache[query] = (
@@ -344,14 +461,17 @@ def set_cached(
             ],
         )
 
-        if len(_search_cache) > 100:
+
+        if len(
+            _search_cache
+        ) > 100:
 
             oldest_query = min(
                 _search_cache,
-                key=lambda key: (
+                key=lambda key:
                     _search_cache[key][0]
-                )
             )
+
 
             _search_cache.pop(
                 oldest_query,
@@ -366,25 +486,27 @@ def relevance_score(
     snippet: str
 ) -> int:
     """
-    Add a small deterministic relevance boost to the upstream
-    web-search ordering.
-
-    This does not attempt to replace the search provider's ranking.
-    It simply rewards exact query-word appearances in important fields.
+    Additional relevance scoring used to slightly reorder
+    upstream web-search results.
     """
+
     title_words = tokenize(
         title
     )
+
 
     url_words = tokenize(
         url
     )
 
+
     snippet_words = tokenize(
         snippet
     )
 
+
     score = 0
+
 
     for word in query_words:
 
@@ -393,15 +515,18 @@ def relevance_score(
             * 6
         )
 
+
         score += (
             url_words.count(word)
             * 3
         )
 
+
         score += (
             snippet_words.count(word)
             * 2
         )
+
 
     return score
 
@@ -410,24 +535,30 @@ def search_web(
     query: str
 ) -> list[dict[str, Any]]:
     """
-    Search the live public web through ddgs.
+    Search the live public web.
     """
+
     cached = get_cached(
         query
     )
 
+
     if cached is not None:
+
         return cached
+
 
     query_words = tokenize(
         query
     )
 
-    search_engine = DDGS(
+
+    engine = DDGS(
         timeout=SEARCH_TIMEOUT_SECONDS
     )
 
-    raw_results = search_engine.text(
+
+    raw_results = engine.text(
         query,
         region="in-en",
         safesearch="moderate",
@@ -435,9 +566,14 @@ def search_web(
         backend="auto",
     )
 
-    results: list[dict[str, Any]] = []
+
+    results: list[
+        dict[str, Any]
+    ] = []
+
 
     seen_urls: set[str] = set()
+
 
     for raw in raw_results:
 
@@ -448,6 +584,7 @@ def search_web(
             )
         ).strip()
 
+
         href = safe_http_url(
             str(
                 raw.get(
@@ -457,6 +594,7 @@ def search_web(
             ).strip()
         )
 
+
         body = str(
             raw.get(
                 "body",
@@ -464,23 +602,34 @@ def search_web(
             )
         ).strip()
 
+
         if not title:
+
             continue
+
 
         if not href:
+
             continue
+
 
         if not body:
+
             continue
 
-        canonical_url = href.lower()
 
-        if canonical_url in seen_urls:
+        key = href.lower()
+
+
+        if key in seen_urls:
+
             continue
+
 
         seen_urls.add(
-            canonical_url
+            key
         )
+
 
         score = relevance_score(
             query_words,
@@ -488,6 +637,7 @@ def search_web(
             href,
             body,
         )
+
 
         results.append(
             {
@@ -497,110 +647,397 @@ def search_web(
                     href
                 ),
                 "snippet": body,
-                "_relevance": score,
+                "_score": score,
             }
         )
 
+
     results.sort(
-        key=lambda result: (
-            -result["_relevance"]
-        )
+        key=lambda result:
+            -result["_score"]
     )
 
+
     for result in results:
+
         result.pop(
-            "_relevance",
+            "_score",
             None
         )
+
 
     set_cached(
         query,
         results
     )
 
+
     return results
 
 
-def perform_search(
-    query: str
-) -> tuple[
-    list[dict[str, Any]],
-    bool,
-    str | None
-]:
+def fetch_image_as_data_url(
+    image_url: str
+) -> str | None:
     """
-    Search the live web first.
+    Download a remote image and convert it to a data URL.
 
-    If live search fails, use the local JSON index.
+    This lets the browser draw the image into a canvas without
+    depending on the remote site's CORS policy.
     """
-    if not query:
-        return (
-            [],
-            False,
-            None
-        )
+
+    safe_url = safe_http_url(
+        image_url
+    )
+
+
+    if not safe_url:
+
+        return None
+
+
+    headers = {
+
+        "User-Agent":
+            "Mozilla/5.0 "
+            "(Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 "
+            "(KHTML, like Gecko) "
+            "Chrome/154.0 Safari/537.36",
+
+        "Accept":
+            "image/avif,image/webp,image/apng,"
+            "image/svg+xml,image/*,*/*;q=0.8",
+
+    }
+
 
     try:
 
-        live_results = search_web(
-            query
+        image_request = Request(
+            safe_url,
+            headers=headers
         )
 
-        if live_results:
-            return (
-                live_results,
-                True,
-                None
+
+        with urlopen(
+            image_request,
+            timeout=IMAGE_TIMEOUT_SECONDS
+        ) as response:
+
+            content_type = (
+                response.headers.get_content_type()
             )
+
+
+            allowed_types = {
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+                "image/avif",
+            }
+
+
+            if content_type not in allowed_types:
+
+                return None
+
+
+            maximum_bytes = 900_000
+
+
+            image_bytes = response.read(
+                maximum_bytes + 1
+            )
+
+
+            if len(image_bytes) > maximum_bytes:
+
+                return None
+
+
+            encoded = base64.b64encode(
+                image_bytes
+            ).decode(
+                "ascii"
+            )
+
+
+            return (
+                f"data:{content_type};"
+                f"base64,{encoded}"
+            )
+
 
     except Exception as exc:
 
         app.logger.warning(
-            "Live web search failed: %s",
+            "Pixellet image download failed: %s",
             exc
         )
 
-        fallback_results = search_local(
+
+        return None
+
+
+def search_pixellet_image(
+    query: str
+) -> dict[str, str] | None:
+    """
+    Search for an image matching the user's query.
+    """
+
+    try:
+
+        engine = DDGS(
+            timeout=7
+        )
+
+
+        image_results = engine.images(
+            query,
+            region="in-en",
+            safesearch="moderate",
+            max_results=5,
+            backend="auto",
+        )
+
+
+    except Exception as exc:
+
+        app.logger.warning(
+            "Pixellet image search failed: %s",
+            exc
+        )
+
+
+        return None
+
+
+    for image_result in image_results:
+
+        title = str(
+            image_result.get(
+                "title",
+                ""
+            )
+        ).strip()
+
+
+        image_url = str(
+            image_result.get(
+                "image",
+                ""
+            )
+        ).strip()
+
+
+        thumbnail_url = str(
+            image_result.get(
+                "thumbnail",
+                ""
+            )
+        ).strip()
+
+
+        source_url = str(
+            image_result.get(
+                "url",
+                ""
+            )
+        ).strip()
+
+
+        candidates = [
+            image_url,
+            thumbnail_url,
+        ]
+
+
+        for candidate in candidates:
+
+            if not candidate:
+
+                continue
+
+
+            data_url = (
+                fetch_image_as_data_url(
+                    candidate
+                )
+            )
+
+
+            if not data_url:
+
+                continue
+
+
+            return {
+                "image": data_url,
+
+                "title":
+                    title or query,
+
+                "source":
+                    safe_http_url(
+                        source_url
+                    ) or "",
+            }
+
+
+    return None
+
+
+@app.get(
+    "/api/suggestions"
+)
+def api_suggestions():
+    """
+    Generate suggestions from live search results.
+    """
+
+    query = clean_query(
+        request.args.get(
+            "q",
+            "",
+            type=str
+        )
+    )
+
+
+    if len(query) < 2:
+
+        return jsonify([])
+
+
+    try:
+
+        results = search_web(
             query
         )
 
-        if fallback_results:
 
-            return (
-                fallback_results,
-                False,
-                "Live web search is temporarily unavailable. "
-                "Showing local fallback results."
-            )
+    except Exception as exc:
 
-        return (
-            [],
-            False,
-            "Live web search is temporarily unavailable."
+        app.logger.warning(
+            "Suggestion request failed: %s",
+            exc
         )
 
-    fallback_results = search_local(
+        return jsonify([])
+
+
+    suggestions = []
+
+    seen: set[str] = set()
+
+
+    for result in results:
+
+        title = str(
+            result.get(
+                "title",
+                ""
+            )
+        ).strip()
+
+
+        if not title:
+
+            continue
+
+
+        key = title.lower()
+
+
+        if key in seen:
+
+            continue
+
+
+        seen.add(
+            key
+        )
+
+
+        suggestions.append(
+            {
+                "text": title
+            }
+        )
+
+
+        if len(
+            suggestions
+        ) >= 6:
+
+            break
+
+
+    return jsonify(
+        suggestions
+    )
+
+
+@app.get(
+    "/api/pixellet"
+)
+def api_pixellet():
+    """
+    Find one image that represents the user's search.
+    """
+
+    query = clean_query(
+        request.args.get(
+            "q",
+            "",
+            type=str
+        )
+    )
+
+
+    if not query:
+
+        return jsonify(
+            {
+                "error":
+                    "A search query is required."
+            }
+        ), 400
+
+
+    pixellet = search_pixellet_image(
         query
     )
 
-    if fallback_results:
 
-        return (
-            fallback_results,
-            False,
-            "No live results were returned. "
-            "Showing local fallback results."
-        )
+    if pixellet is None:
 
-    return (
-        [],
-        True,
-        None
+        return jsonify(
+            {
+                "error":
+                    "No suitable image was found.",
+
+                "query":
+                    query,
+            }
+        ), 404
+
+
+    return jsonify(
+        {
+            "query":
+                query,
+
+            **pixellet,
+        }
     )
 
 
 @app.get("/")
 def home():
+
     return render_template(
         "index.html"
     )
@@ -615,15 +1052,81 @@ def results():
         type=str
     )
 
+
     query = clean_query(
         raw_query
     )
 
-    started_at = time.perf_counter()
 
-    search_results, live_search_used, message = perform_search(
-        query
+    started_at = (
+        time.perf_counter()
     )
+
+
+    live_search_used = False
+
+    message = None
+
+    search_results: list[
+        dict[str, Any]
+    ] = []
+
+
+    if query:
+
+        try:
+
+            search_results = search_web(
+                query
+            )
+
+
+            if search_results:
+
+                live_search_used = True
+
+            else:
+
+                search_results = search_local(
+                    query
+                )
+
+
+                if search_results:
+
+                    message = (
+                        "No live results were returned. "
+                        "Showing local fallback results."
+                    )
+
+        except Exception as exc:
+
+            app.logger.warning(
+                "Live search failed: %s",
+                exc
+            )
+
+
+            search_results = search_local(
+                query
+            )
+
+
+            if search_results:
+
+                message = (
+                    "Live web search is temporarily "
+                    "unavailable. Showing local "
+                    "fallback results."
+                )
+
+            else:
+
+                message = (
+                    "Live web search is temporarily "
+                    "unavailable."
+                )
+
 
     elapsed_ms = round(
         (
@@ -632,13 +1135,23 @@ def results():
         ) * 1000
     )
 
+
     return render_template(
         "search.html",
+
         query=query,
+
         results=search_results,
-        result_count=len(search_results),
-        live_search_used=live_search_used,
+
+        result_count=len(
+            search_results
+        ),
+
+        live_search_used=
+            live_search_used,
+
         message=message,
+
         elapsed_ms=elapsed_ms,
     )
 
@@ -649,11 +1162,19 @@ def not_found(_error):
     return (
         render_template(
             "search.html",
+
             query="",
+
             results=[],
+
             result_count=0,
+
             live_search_used=False,
-            message="The page you requested does not exist.",
+
+            message=
+                "The page you requested does "
+                "not exist.",
+
             elapsed_ms=0,
         ),
         404,

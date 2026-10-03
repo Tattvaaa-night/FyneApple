@@ -12,7 +12,7 @@
 
     <meta
         name="description"
-        content="FyneApple — Search beyond limits."
+        content="FyneApple — search beyond limits."
     >
 
     <title>
@@ -49,16 +49,6 @@
 
                         }
 
-                    },
-
-                    boxShadow: {
-
-                        glow:
-                            "0 0 50px rgba(255, 212, 59, .20)",
-
-                        violet:
-                            "0 0 50px rgba(155, 93, 229, .18)"
-
                     }
 
                 }
@@ -85,19 +75,34 @@
 
                 radial-gradient(
                     circle at 10% 12%,
-                    rgba(255, 159, 28, .17),
+                    rgba(
+                        255,
+                        159,
+                        28,
+                        .17
+                    ),
                     transparent 28%
                 ),
 
                 radial-gradient(
                     circle at 88% 14%,
-                    rgba(0, 217, 255, .12),
+                    rgba(
+                        0,
+                        217,
+                        255,
+                        .12
+                    ),
                     transparent 26%
                 ),
 
                 radial-gradient(
                     circle at 48% 90%,
-                    rgba(155, 93, 229, .18),
+                    rgba(
+                        155,
+                        93,
+                        229,
+                        .18
+                    ),
                     transparent 35%
                 ),
 
@@ -114,9 +119,9 @@
 
             inset: 0;
 
-            pointer-events: none;
-
             overflow: hidden;
+
+            pointer-events: none;
 
             z-index: 0;
 
@@ -223,17 +228,31 @@
 
         .grid-glow {
 
+            position: absolute;
+
+            inset: 0;
+
             background-image:
 
                 linear-gradient(
-                    rgba(255,255,255,.035)
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .035
+                    )
                     1px,
                     transparent 1px
                 ),
 
                 linear-gradient(
                     90deg,
-                    rgba(255,255,255,.035)
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .035
+                    )
                     1px,
                     transparent 1px
                 );
@@ -279,22 +298,57 @@
         }
 
 
+        .logo-gradient {
+
+            background:
+
+                linear-gradient(
+                    100deg,
+                    #FFFFFF 5%,
+                    #FFF176 40%,
+                    #FFD43B 60%,
+                    #FF9F1C 78%,
+                    #9B5DE5 100%
+                );
+
+            -webkit-background-clip:
+                text;
+
+            background-clip:
+                text;
+
+            color:
+                transparent;
+
+        }
+
+
         .search-shell {
 
             background:
 
                 linear-gradient(
-                    rgba(10,14,30,.96),
-                    rgba(10,14,30,.96)
+                    rgba(
+                        10,
+                        14,
+                        30,
+                        .96
+                    ),
+                    rgba(
+                        10,
+                        14,
+                        30,
+                        .96
+                    )
                 )
                 padding-box,
 
                 linear-gradient(
                     100deg,
-                    #ffb703,
-                    #ffd43b,
-                    #00d9ff,
-                    #9b5de5
+                    #FFB703,
+                    #FFD43B,
+                    #00D9FF,
+                    #9B5DE5
                 )
                 border-box;
 
@@ -323,33 +377,14 @@
         }
 
 
-        .logo-gradient {
-
-            background:
-
-                linear-gradient(
-                    100deg,
-                    #ffffff 5%,
-                    #fff176 40%,
-                    #ffd43b 60%,
-                    #ff9f1c 78%,
-                    #9b5de5 100%
-                );
-
-            -webkit-background-clip: text;
-
-            background-clip: text;
-
-            color: transparent;
-
-        }
-
-
         .feature-card {
 
             transition:
+
                 transform .22s ease,
+
                 border-color .22s ease,
+
                 box-shadow .22s ease;
 
         }
@@ -369,6 +404,7 @@
                 );
 
             box-shadow:
+
                 0 20px 55px
                 rgba(
                     0,
@@ -383,8 +419,11 @@
         .topic-chip {
 
             transition:
+
                 transform .18s ease,
+
                 border-color .18s ease,
+
                 background .18s ease;
 
         }
@@ -431,29 +470,158 @@
 
             z-index: 1;
 
-            transition:
-                left .08s linear,
-                top .08s linear;
+        }
+
+
+        .fyne-suggestions {
+
+            animation:
+
+                suggestionIn
+                .16s
+                ease-out;
 
         }
 
 
-        .soft-mode body {
+        @keyframes suggestionIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-6px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        .fyne-suggestion-item {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                12px
+                13px;
+
+            border-radius: 13px;
+
+            color:
+                #CBD5E1;
+
+            background:
+                transparent;
+
+            text-align: left;
+
+            transition:
+
+                background .15s ease,
+
+                color .15s ease,
+
+                transform .15s ease;
+
+        }
+
+
+        .fyne-suggestion-item:hover {
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .06
+                );
+
+            color:
+                #FFFFFF;
+
+            transform:
+                translateX(2px);
+
+        }
+
+
+        .fyne-suggestion-icon {
+
+            width: 30px;
+
+            height: 30px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 10px;
 
             background:
 
-                radial-gradient(
-                    circle at 20% 10%,
+                linear-gradient(
+                    135deg,
                     rgba(
                         255,
                         212,
                         59,
-                        .16
+                        .12
                     ),
-                    transparent 35%
-                ),
+                    rgba(
+                        155,
+                        93,
+                        229,
+                        .12
+                    )
+                );
 
-                #101528;
+            color:
+                #FFD43B;
+
+        }
+
+
+        .fyne-suggestion-text {
+
+            min-width: 0;
+
+            flex: 1;
+
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            text-overflow: ellipsis;
+
+            font-size: 14px;
+
+        }
+
+
+        .fyne-suggestion-arrow {
+
+            color:
+                #64748B;
 
         }
 
@@ -462,7 +630,9 @@
 </head>
 
 
-<body class="min-h-screen text-white antialiased">
+<body
+    class="min-h-screen text-white antialiased"
+>
 
 
     <div class="ambient">
@@ -473,7 +643,7 @@
 
         <div class="orb orb-three"></div>
 
-        <div class="absolute inset-0 grid-glow"></div>
+        <div class="grid-glow"></div>
 
     </div>
 
@@ -487,7 +657,6 @@
     <header
         class="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 lg:px-8"
     >
-
 
         <a
             href="/"
@@ -507,7 +676,7 @@
                 <defs>
 
                     <linearGradient
-                        id="pine-logo"
+                        id="logo-pine"
                         x1="8"
                         y1="6"
                         x2="41"
@@ -533,7 +702,7 @@
 
 
                     <linearGradient
-                        id="leaf-logo"
+                        id="logo-leaf"
                         x1="15"
                         y1="2"
                         x2="34"
@@ -557,7 +726,7 @@
 
                 <path
                     d="M24 2C22 5 18 8 15 10L19 15C21 13 23 11 24 9C25 11 27 13 29 15L33 10C30 8 26 5 24 2Z"
-                    fill="url(#leaf-logo)"
+                    fill="url(#logo-leaf)"
                 />
 
 
@@ -575,7 +744,7 @@
 
                 <path
                     d="M24 13C17 13 11 19 11 28C11 37 16 44 24 46C32 44 37 37 37 28C37 19 31 13 24 13Z"
-                    fill="url(#pine-logo)"
+                    fill="url(#logo-pine)"
                 />
 
 
@@ -611,17 +780,6 @@
                 What makes it different?
             </a>
 
-
-            <button
-                id="theme-button"
-                type="button"
-                class="glass rounded-full p-2.5 text-slate-200 transition hover:border-yellow-400/30"
-                aria-label="Toggle visual theme"
-                title="Toggle visual theme"
-            >
-                ☼
-            </button>
-
         </div>
 
     </header>
@@ -650,7 +808,9 @@
             </div>
 
 
-            <div class="mb-6 flex justify-center">
+            <div
+                class="mb-6 flex justify-center"
+            >
 
                 <div class="relative">
 
@@ -777,8 +937,7 @@
                 class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg"
             >
                 Search beyond limits.
-                Fast live results,
-                a radiant interface,
+                Live results, smart suggestions,
                 and a little personality.
             </p>
 
@@ -791,101 +950,22 @@
                 class="mx-auto mt-9 w-full max-w-3xl"
             >
 
-
                 <div
-                    class="search-shell flex items-center rounded-full p-1.5 overflow-hidden"
+                    class="relative"
                 >
 
 
-                    <svg
-                        class="ml-5 h-5 w-5 shrink-0 text-slate-400"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        aria-hidden="true"
+                    <div
+                        class="search-shell flex items-center rounded-full overflow-hidden p-1.5"
                     >
 
-                        <circle
-                            cx="11"
-                            cy="11"
-                            r="7"
-                        ></circle>
-
-                        <path
-                            d="m20 20-3.5-3.5"
-                        ></path>
-
-                    </svg>
-
-
-                    <input
-                        id="query"
-                        name="q"
-                        type="search"
-                        maxlength="300"
-                        autocomplete="off"
-                        autofocus
-                        class="min-w-0 flex-1 bg-transparent px-4 py-4 text-base text-white outline-none placeholder:text-slate-500 sm:text-lg"
-                        placeholder="Search anything..."
-                        aria-label="Search anything"
-                    >
-
-
-                    <button
-                        id="voice-button"
-                        type="button"
-                        class="hidden rounded-full p-3 text-slate-300 transition hover:bg-white/5 hover:text-white sm:block"
-                        aria-label="Voice search"
-                        title="Voice search"
-                    >
 
                         <svg
-                            class="h-5 w-5"
+                            class="ml-5 h-5 w-5 shrink-0 text-slate-400"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="2"
-                            aria-hidden="true"
-                        >
-
-                            <rect
-                                x="9"
-                                y="3"
-                                width="6"
-                                height="11"
-                                rx="3"
-                            ></rect>
-
-                            <path
-                                d="M5 11a7 7 0 0 0 14 0"
-                            ></path>
-
-                            <path
-                                d="M12 18v3"
-                            ></path>
-
-                            <path
-                                d="M8 21h8"
-                            ></path>
-
-                        </svg>
-
-                    </button>
-
-
-                    <button
-                        type="submit"
-                       class="group mr-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 shadow-lg shadow-yellow-500/20 transition hover:scale-105"
-                        aria-label="Search"
-                    >
-
-                        <svg
-                            class="h-5 w-5 transition group-hover:translate-x-0.5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2.3"
                             aria-hidden="true"
                         >
 
@@ -901,33 +981,102 @@
 
                         </svg>
 
-                    </button>
+
+                        <input
+                            id="query"
+                            name="q"
+                            type="search"
+                            maxlength="300"
+                            autocomplete="off"
+                            autofocus
+                            class="min-w-0 flex-1 bg-transparent px-4 py-4 text-base text-white outline-none placeholder:text-slate-500 sm:text-lg"
+                            placeholder="Search anything..."
+                            aria-label="Search anything"
+                        >
+
+
+                        <button
+                            id="voice-button"
+                            type="button"
+                            class="hidden rounded-full p-3 text-slate-300 transition hover:bg-white/5 hover:text-white sm:block"
+                            aria-label="Voice search"
+                            title="Voice search"
+                        >
+
+                            <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                aria-hidden="true"
+                            >
+
+                                <rect
+                                    x="9"
+                                    y="3"
+                                    width="6"
+                                    height="11"
+                                    rx="3"
+                                ></rect>
+
+                                <path
+                                    d="M5 11a7 7 0 0 0 14 0"
+                                ></path>
+
+                                <path
+                                    d="M12 18v3"
+                                ></path>
+
+                                <path
+                                    d="M8 21h8"
+                                ></path>
+
+                            </svg>
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="group mr-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 text-slate-950 shadow-lg shadow-yellow-500/20 transition hover:scale-105"
+                            aria-label="Search"
+                        >
+
+                            <svg
+                                class="h-5 w-5 transition group-hover:translate-x-0.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.3"
+                                aria-hidden="true"
+                            >
+
+                                <circle
+                                    cx="11"
+                                    cy="11"
+                                    r="7"
+                                ></circle>
+
+                                <path
+                                    d="m20 20-3.5-3.5"
+                                ></path>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="fyne-suggestions hidden absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#0D1225]/95 p-2 shadow-2xl backdrop-blur-xl"
+                        role="listbox"
+                        aria-label="Search suggestions"
+                    ></div>
+
 
                 </div>
-
-
-                <div
-                    class="mt-5 flex flex-wrap justify-center gap-3"
-                >
-
-                    <button
-                        type="submit"
-                        class="rounded-full bg-gradient-to-r from-yellow-300 to-orange-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-yellow-500/15 transition hover:-translate-y-0.5"
-                    >
-                        Fyne Search
-                    </button>
-
-
-                    <button
-                        id="curious-button"
-                        type="button"
-                        class="rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-slate-200 transition hover:-translate-y-0.5 hover:border-violet-300/30"
-                    >
-                        I'm Feeling Curious
-                    </button>
-
-                </div>
-
 
             </form>
 
@@ -1009,7 +1158,6 @@
 
             </div>
 
-
         </section>
 
 
@@ -1029,12 +1177,16 @@
                     ✦
                 </div>
 
-                <h2 class="font-semibold">
+                <h2
+                    class="font-semibold"
+                >
                     FyneSpark
                 </h2>
 
-                <p class="mt-2 text-sm leading-6 text-slate-400">
-                    Lightweight relevance boosts help move closely matching results toward the top.
+                <p
+                    class="mt-2 text-sm leading-6 text-slate-400"
+                >
+                    Lightweight relevance ranking that pays extra attention to the title, URL, and snippet.
                 </p>
 
             </article>
@@ -1050,12 +1202,16 @@
                     ↯
                 </div>
 
-                <h2 class="font-semibold">
+                <h2
+                    class="font-semibold"
+                >
                     Live Web
                 </h2>
 
-                <p class="mt-2 text-sm leading-6 text-slate-400">
-                    Search the public web instead of being restricted to the original five-page mock database.
+                <p
+                    class="mt-2 text-sm leading-6 text-slate-400"
+                >
+                    Search the public web rather than being restricted to the original mock dataset.
                 </p>
 
             </article>
@@ -1071,12 +1227,16 @@
                     ◈
                 </div>
 
-                <h2 class="font-semibold">
-                    Radiant UI
+                <h2
+                    class="font-semibold"
+                >
+                    Fynelet
                 </h2>
 
-                <p class="mt-2 text-sm leading-6 text-slate-400">
-                    Animated lighting, glass surfaces, gradients, and a custom pineapple identity.
+                <p
+                    class="mt-2 text-sm leading-6 text-slate-400"
+                >
+                    Your search creates a tiny moving pixel-art companion on the results page.
                 </p>
 
             </article>
@@ -1092,16 +1252,22 @@
                     /
                 </div>
 
-                <h2 class="font-semibold">
+                <h2
+                    class="font-semibold"
+                >
                     Keyboard Ready
                 </h2>
 
-                <p class="mt-2 text-sm leading-6 text-slate-400">
+                <p
+                    class="mt-2 text-sm leading-6 text-slate-400"
+                >
                     Press
-                    <kbd class="rounded border border-white/10 px-1.5 py-0.5 text-[11px]">
+                    <kbd
+                        class="rounded border border-white/10 px-1.5 py-0.5 text-[11px]"
+                    >
                         /
                     </kbd>
-                    to instantly focus search.
+                    to jump into search.
                 </p>
 
             </article>
@@ -1153,244 +1319,7 @@
     </footer>
 
 
-    <script>
-
-        const queryInput =
-            document.getElementById(
-                "query"
-            );
-
-
-        const form =
-            document.getElementById(
-                "search-form"
-            );
-
-
-        const curiousButton =
-            document.getElementById(
-                "curious-button"
-            );
-
-
-        const voiceButton =
-            document.getElementById(
-                "voice-button"
-            );
-
-
-        const themeButton =
-            document.getElementById(
-                "theme-button"
-            );
-
-
-        const cursorGlow =
-            document.getElementById(
-                "cursor-glow"
-            );
-
-
-        const curiousQueries = [
-
-            "how did the internet start",
-
-            "how do neural networks work",
-
-            "best programming languages to learn",
-
-            "how does quantum computing work",
-
-            "Cristiano Ronaldo",
-
-            "how to learn DSA",
-
-            "history of smartphones",
-
-            "why is the sky blue",
-
-            "best places to visit in India",
-
-            "easy high protein recipes",
-
-            "what is artificial intelligence",
-
-            "how does GPS work"
-
-        ];
-
-
-        document
-            .querySelectorAll(".topic-chip")
-            .forEach(
-                (chip) => {
-
-                    chip.addEventListener(
-                        "click",
-                        () => {
-
-                            queryInput.value =
-                                chip.dataset.query;
-
-                            form.submit();
-
-                        }
-                    );
-
-                }
-            );
-
-
-        curiousButton.addEventListener(
-            "click",
-            () => {
-
-                const selected =
-                    curiousQueries[
-                        Math.floor(
-                            Math.random()
-                            *
-                            curiousQueries.length
-                        )
-                    ];
-
-                queryInput.value =
-                    selected;
-
-                form.submit();
-
-            }
-        );
-
-
-        document.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.key === "/" &&
-                    document.activeElement !== queryInput &&
-                    ![
-                        "INPUT",
-                        "TEXTAREA",
-                        "SELECT"
-                    ].includes(
-                        document.activeElement.tagName
-                    )
-                ) {
-
-                    event.preventDefault();
-
-                    queryInput.focus();
-
-                    queryInput.select();
-
-                }
-
-            }
-        );
-
-
-        document.addEventListener(
-            "mousemove",
-            (event) => {
-
-                if (!cursorGlow) {
-                    return;
-                }
-
-                cursorGlow.style.left =
-                    `${event.clientX}px`;
-
-                cursorGlow.style.top =
-                    `${event.clientY}px`;
-
-            }
-        );
-
-
-        themeButton.addEventListener(
-            "click",
-            () => {
-
-                document.body.classList.toggle(
-                    "brightness-[1.18]"
-                );
-
-            }
-        );
-
-
-        const SpeechRecognition =
-            window.SpeechRecognition ||
-            window.webkitSpeechRecognition;
-
-
-        if (SpeechRecognition) {
-
-            const recognition =
-                new SpeechRecognition();
-
-            recognition.lang =
-                "en-IN";
-
-            recognition.interimResults =
-                false;
-
-            recognition.maxAlternatives =
-                1;
-
-
-            voiceButton.addEventListener(
-                "click",
-                () => {
-
-                    try {
-
-                        recognition.start();
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Voice recognition could not start.",
-                            error
-                        );
-
-                    }
-
-                }
-            );
-
-
-            recognition.addEventListener(
-                "result",
-                (event) => {
-
-                    const transcript =
-                        event.results[0][0]
-                            .transcript;
-
-                    queryInput.value =
-                        transcript;
-
-                    form.submit();
-
-                }
-            );
-
-
-        } else {
-
-            voiceButton.title =
-                "Voice search is not supported by this browser.";
-
-        }
-
-
-        queryInput.focus();
-
-    </script>
-
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 
 </body>
 
