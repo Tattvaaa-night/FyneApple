@@ -8,19 +8,22 @@
         );
 
 
-    const inputs =
-        document.querySelectorAll(
-            'input[name="q"]'
-        );
-
-
     let suggestionController =
         null;
 
 
-    function escapeHtml(
-        value
-    ) {
+    const RECENT_STORAGE_KEY =
+        "fyneapple_recent_searches";
+
+
+    /*
+     * ---------------------------------------------------------
+     * Utility
+     * ---------------------------------------------------------
+     */
+
+
+    function escapeHtml(value) {
 
         const element =
             document.createElement(
@@ -33,6 +36,108 @@
 
 
         return element.innerHTML;
+    }
+
+
+    function getSuggestionBox(form) {
+
+        return form.querySelector(
+            ".fyne-suggestions"
+        );
+
+    }
+
+
+    function closeSuggestions(form) {
+
+        const box =
+            getSuggestionBox(
+                form
+            );
+
+
+        if (!box) {
+            return;
+        }
+
+
+        box.classList.add(
+            "hidden"
+        );
+
+
+        box.innerHTML =
+            "";
+
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Recent Searches
+     * ---------------------------------------------------------
+     */
+
+
+    function getRecentSearches() {
+
+        try {
+
+            const stored =
+                localStorage.getItem(
+                    RECENT_STORAGE_KEY
+                );
+
+
+            if (!stored) {
+
+                return [];
+
+            }
+
+
+            const parsed =
+                JSON.parse(
+                    stored
+                );
+
+
+            if (
+                !Array.isArray(
+                    parsed
+                )
+            ) {
+
+                return [];
+
+            }
+
+
+            return parsed
+                .filter(
+                    item =>
+                        typeof item ===
+                        "string"
+                )
+                .map(
+                    item =>
+                        item.trim()
+                )
+                .filter(
+                    item =>
+                        item.length > 0
+                )
+                .slice(
+                    0,
+                    8
+                );
+
+        } catch {
+
+            return [];
+
+        }
+
     }
 
 
@@ -51,35 +156,24 @@
         }
 
 
-        let existing = [];
+        const current =
+            getRecentSearches();
 
 
-        try {
-
-            existing =
-                JSON.parse(
-                    localStorage.getItem(
-                        "fyneapple_recent_searches"
-                    ) || "[]"
-                );
-
-        } catch {
-
-            existing = [];
-
-        }
+        const filtered =
+            current.filter(
+                item =>
+                    item.toLowerCase()
+                    !==
+                    cleaned.toLowerCase()
+            );
 
 
         const updated = [
 
             cleaned,
 
-            ...existing.filter(
-                item =>
-                    String(item).toLowerCase()
-                    !==
-                    cleaned.toLowerCase()
-            ),
+            ...filtered,
 
         ].slice(
             0,
@@ -88,89 +182,71 @@
 
 
         localStorage.setItem(
-            "fyneapple_recent_searches",
+            RECENT_STORAGE_KEY,
             JSON.stringify(
                 updated
             )
         );
+
     }
 
 
-    function getRecentSearches() {
+    function removeRecentSearch(
+        query,
+        form
+    ) {
 
-        try {
-
-            const value =
-                JSON.parse(
-                    localStorage.getItem(
-                        "fyneapple_recent_searches"
-                    ) || "[]"
+        const updated =
+            getRecentSearches()
+                .filter(
+                    item =>
+                        item.toLowerCase()
+                        !==
+                        query.toLowerCase()
                 );
 
 
-            if (
-                Array.isArray(value)
-            ) {
-
-                return value;
-
-            }
-
-        } catch {
-
-            return [];
-
-        }
+        localStorage.setItem(
+            RECENT_STORAGE_KEY,
+            JSON.stringify(
+                updated
+            )
+        );
 
 
-        return [];
-
-    }
-
-
-    function getSuggestionBox(
-        form
-    ) {
-
-        return form.querySelector(
-            ".fyne-suggestions"
+        showRecentSuggestions(
+            form
         );
 
     }
 
 
-    function closeSuggestions(
+    function clearAllRecentSearches(
         form
     ) {
 
-        const box =
-            getSuggestionBox(
-                form
-            );
-
-
-        if (!box) {
-
-            return;
-
-        }
-
-
-        box.classList.add(
-            "hidden"
+        localStorage.removeItem(
+            RECENT_STORAGE_KEY
         );
 
 
-        box.innerHTML =
-            "";
+        closeSuggestions(
+            form
+        );
 
     }
 
 
-    function createSuggestion(
+    /*
+     * ---------------------------------------------------------
+     * Suggestion Components
+     * ---------------------------------------------------------
+     */
+
+
+    function createLiveSuggestion(
         text,
-        form,
-        recent = false
+        form
     ) {
 
         const button =
@@ -189,24 +265,22 @@
 
         button.innerHTML = `
 
-            <span class="fyne-suggestion-icon">
-
-                ${recent ? "↺" : "⌕"}
-
+            <span
+                class="fyne-suggestion-icon"
+            >
+                ⌕
             </span>
 
-
-            <span class="fyne-suggestion-text">
-
+            <span
+                class="fyne-suggestion-text"
+            >
                 ${escapeHtml(text)}
-
             </span>
 
-
-            <span class="fyne-suggestion-arrow">
-
+            <span
+                class="fyne-suggestion-arrow"
+            >
                 ↗
-
             </span>
 
         `;
@@ -223,9 +297,7 @@
 
 
                 if (!input) {
-
                     return;
-
                 }
 
 
@@ -235,6 +307,11 @@
 
                 saveRecentSearch(
                     text
+                );
+
+
+                closeSuggestions(
+                    form
                 );
 
 
@@ -249,109 +326,169 @@
     }
 
 
-    function renderSuggestions(
-        form,
-        values
+    function createRecentSuggestion(
+        text,
+        form
     ) {
 
-        const box =
-            getSuggestionBox(
-                form
+        const wrapper =
+            document.createElement(
+                "div"
             );
 
 
-        if (!box) {
-
-            return;
-
-        }
+        wrapper.className =
+            "fyne-recent-item";
 
 
-        const unique =
-            [];
+        wrapper.innerHTML = `
+
+            <button
+                type="button"
+                class="fyne-recent-main"
+            >
+
+                <span
+                    class="fyne-suggestion-icon"
+                >
+                    ↺
+                </span>
+
+                <span
+                    class="fyne-suggestion-text"
+                >
+                    ${escapeHtml(text)}
+                </span>
+
+            </button>
 
 
-        const seen =
-            new Set();
+            <button
+                type="button"
+                class="fyne-recent-delete"
+                aria-label="Delete recent search: ${escapeHtml(text)}"
+                title="Delete this recent search"
+            >
+                ×
+            </button>
+
+        `;
 
 
-        values.forEach(
-            value => {
-
-                const text =
-                    String(
-                        value
-                    ).trim();
+        const mainButton =
+            wrapper.querySelector(
+                ".fyne-recent-main"
+            );
 
 
-                if (!text) {
+        const deleteButton =
+            wrapper.querySelector(
+                ".fyne-recent-delete"
+            );
 
+
+        mainButton.addEventListener(
+            "click",
+            () => {
+
+                const input =
+                    form.querySelector(
+                        'input[name="q"]'
+                    );
+
+
+                if (!input) {
                     return;
-
                 }
 
 
-                const key =
-                    text.toLowerCase();
+                input.value =
+                    text;
 
 
-                if (
-                    seen.has(key)
-                ) {
-
-                    return;
-
-                }
+                closeSuggestions(
+                    form
+                );
 
 
-                seen.add(key);
+                form.submit();
 
-                unique.push(
-                    text
+            }
+        );
+
+
+        deleteButton.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                removeRecentSearch(
+                    text,
+                    form
                 );
 
             }
         );
 
 
-        if (!unique.length) {
+        return wrapper;
 
-            showRecentSuggestions(
-                form
-            );
-
-            return;
-
-        }
+    }
 
 
-        box.innerHTML =
-            "";
+    function createClearAllButton(
+        form
+    ) {
 
-
-        unique
-            .slice(
-                0,
-                6
-            )
-            .forEach(
-                suggestion => {
-
-                    box.appendChild(
-                        createSuggestion(
-                            suggestion,
-                            form,
-                            false
-                        )
-                    );
-
-                }
+        const button =
+            document.createElement(
+                "button"
             );
 
 
-        box.classList.remove(
-            "hidden"
+        button.type =
+            "button";
+
+
+        button.className =
+            "fyne-clear-all";
+
+
+        button.innerHTML = `
+
+            <span>
+                Clear all
+            </span>
+
+            <span>
+                ×
+            </span>
+
+        `;
+
+
+        button.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                clearAllRecentSearches(
+                    form
+                );
+
+            }
         );
+
+
+        return button;
 
     }
 
@@ -367,9 +504,7 @@
 
 
         if (!box) {
-
             return;
-
         }
 
 
@@ -392,19 +527,171 @@
             "";
 
 
-        recent
+        const header =
+            document.createElement(
+                "div"
+            );
+
+
+        header.className =
+            "fyne-suggestion-header";
+
+
+        header.innerHTML = `
+
+            <span>
+                Recent searches
+            </span>
+
+        `;
+
+
+        box.appendChild(
+            header
+        );
+
+
+        recent.forEach(
+            search => {
+
+                box.appendChild(
+                    createRecentSuggestion(
+                        search,
+                        form
+                    )
+                );
+
+            }
+        );
+
+
+        box.appendChild(
+            createClearAllButton(
+                form
+            )
+        );
+
+
+        box.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    function renderLiveSuggestions(
+        form,
+        values
+    ) {
+
+        const box =
+            getSuggestionBox(
+                form
+            );
+
+
+        if (!box) {
+            return;
+        }
+
+
+        const unique =
+            [];
+
+
+        const seen =
+            new Set();
+
+
+        values.forEach(
+            value => {
+
+                const text =
+                    String(
+                        value
+                    ).trim();
+
+
+                if (!text) {
+                    return;
+                }
+
+
+                const key =
+                    text.toLowerCase();
+
+
+                if (
+                    seen.has(key)
+                ) {
+                    return;
+                }
+
+
+                seen.add(
+                    key
+                );
+
+
+                unique.push(
+                    text
+                );
+
+            }
+        );
+
+
+        if (!unique.length) {
+
+            closeSuggestions(
+                form
+            );
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+            "";
+
+
+        const header =
+            document.createElement(
+                "div"
+            );
+
+
+        header.className =
+            "fyne-suggestion-header";
+
+
+        header.innerHTML = `
+
+            <span>
+                FyneApple suggestions
+            </span>
+
+        `;
+
+
+        box.appendChild(
+            header
+        );
+
+
+        unique
             .slice(
                 0,
                 6
             )
             .forEach(
-                search => {
+                suggestion => {
 
                     box.appendChild(
-                        createSuggestion(
-                            String(search),
-                            form,
-                            true
+                        createLiveSuggestion(
+                            suggestion,
+                            form
                         )
                     );
 
@@ -417,6 +704,13 @@
         );
 
     }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Live Suggestions API
+     * ---------------------------------------------------------
+     */
 
 
     async function fetchSuggestions(
@@ -461,7 +755,7 @@
                     `/api/suggestions?q=${encodeURIComponent(trimmed)}`,
                     {
                         signal:
-                            suggestionController.signal,
+                            suggestionController.signal
                     }
                 );
 
@@ -481,13 +775,14 @@
                 await response.json();
 
 
-            renderSuggestions(
+            renderLiveSuggestions(
                 form,
                 suggestions.map(
                     item =>
                         item.text
                 )
             );
+
 
         } catch (error) {
 
@@ -510,6 +805,13 @@
     }
 
 
+    /*
+     * ---------------------------------------------------------
+     * Search Forms
+     * ---------------------------------------------------------
+     */
+
+
     forms.forEach(
         form => {
 
@@ -520,13 +822,11 @@
 
 
             if (!input) {
-
                 return;
-
             }
 
 
-            let timer =
+            let suggestionTimer =
                 null;
 
 
@@ -535,11 +835,11 @@
                 () => {
 
                     clearTimeout(
-                        timer
+                        suggestionTimer
                     );
 
 
-                    timer =
+                    suggestionTimer =
                         setTimeout(
                             () => {
 
@@ -562,8 +862,15 @@
 
                     if (
                         input.value.trim()
-                            .length < 2
+                            .length >= 2
                     ) {
+
+                        fetchSuggestions(
+                            input.value,
+                            form
+                        );
+
+                    } else {
 
                         showRecentSuggestions(
                             form
@@ -615,6 +922,13 @@
     );
 
 
+    /*
+     * ---------------------------------------------------------
+     * Topic Chips
+     * ---------------------------------------------------------
+     */
+
+
     document
         .querySelectorAll(
             ".topic-chip"
@@ -626,19 +940,20 @@
                     "click",
                     () => {
 
-                        const form =
+                        const main =
                             chip.closest(
                                 "main"
-                            )
-                            ?.querySelector(
+                            );
+
+
+                        const form =
+                            main?.querySelector(
                                 'form[action="/search"]'
                             );
 
 
                         if (!form) {
-
                             return;
-
                         }
 
 
@@ -649,20 +964,13 @@
 
 
                         if (!input) {
-
                             return;
-
                         }
 
 
                         input.value =
                             chip.dataset.query ||
                             "";
-
-
-                        saveRecentSearch(
-                            input.value
-                        );
 
 
                         form.submit();
@@ -672,6 +980,13 @@
 
             }
         );
+
+
+    /*
+     * ---------------------------------------------------------
+     * I'm Feeling Curious
+     * ---------------------------------------------------------
+     */
 
 
     const curiousButton =
@@ -723,7 +1038,7 @@
                     );
 
 
-                const query =
+                const selected =
                     curiousQueries[
                         index
                     ];
@@ -747,12 +1062,7 @@
                 ) {
 
                     input.value =
-                        query;
-
-
-                    saveRecentSearch(
-                        query
-                    );
+                        selected;
 
 
                     form.submit();
@@ -763,6 +1073,13 @@
         );
 
     }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Keyboard Shortcut
+     * ---------------------------------------------------------
+     */
 
 
     document.addEventListener(
@@ -792,9 +1109,7 @@
 
 
                 if (!input) {
-
                     return;
-
                 }
 
 
@@ -807,8 +1122,34 @@
 
             }
 
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                document.querySelectorAll(
+                    ".fyne-suggestions"
+                ).forEach(
+                    box => {
+
+                        box.classList.add(
+                            "hidden"
+                        );
+
+                    }
+                );
+
+            }
+
         }
     );
+
+
+    /*
+     * ---------------------------------------------------------
+     * Focus Button
+     * ---------------------------------------------------------
+     */
 
 
     const focusButton =
@@ -831,9 +1172,7 @@
                     );
 
 
-                if (
-                    input
-                ) {
+                if (input) {
 
                     input.focus();
 
@@ -845,6 +1184,13 @@
         );
 
     }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Mouse Glow
+     * ---------------------------------------------------------
+     */
 
 
     const cursorGlow =
@@ -871,6 +1217,13 @@
         );
 
     }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Voice Search
+     * ---------------------------------------------------------
+     */
 
 
     const voiceButton =
@@ -951,19 +1304,12 @@
 
 
                 if (!transcript) {
-
                     return;
-
                 }
 
 
                 mainQuery.value =
                     transcript;
-
-
-                saveRecentSearch(
-                    transcript
-                );
 
 
                 mainForm.submit();
@@ -972,6 +1318,400 @@
         );
 
     }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Rufus Music Player
+     * ---------------------------------------------------------
+     */
+
+
+    const musicButton =
+        document.getElementById(
+            "rufus-button"
+        );
+
+
+    const musicLabel =
+        document.getElementById(
+            "rufus-label"
+        );
+
+
+    const visualizer =
+        document.getElementById(
+            "rufus-visualizer"
+        );
+
+
+    const musicVolume =
+        document.getElementById(
+            "rufus-volume"
+        );
+
+
+    let audioContext =
+        null;
+
+
+    let masterGain =
+        null;
+
+
+    let musicTimer =
+        null;
+
+
+    let musicPlaying =
+        false;
+
+
+    let musicStep =
+        0;
+
+
+    const melody = [
+
+        261.63,
+
+        293.66,
+
+        392.00,
+
+        329.63,
+
+        440.00,
+
+        392.00,
+
+        329.63,
+
+        293.66
+
+    ];
+
+
+    function initializeAudio() {
+
+        if (audioContext) {
+
+            return;
+
+        }
+
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+
+        if (!AudioContext) {
+
+            return;
+
+        }
+
+
+        audioContext =
+            new AudioContext();
+
+
+        masterGain =
+            audioContext.createGain();
+
+
+        masterGain.gain.value =
+            0.045;
+
+
+        masterGain.connect(
+            audioContext.destination
+        );
+
+    }
+
+
+    function playNote(
+        frequency
+    ) {
+
+        if (
+            !audioContext ||
+            !masterGain
+        ) {
+
+            return;
+
+        }
+
+
+        const now =
+            audioContext.currentTime;
+
+
+        const oscillator =
+            audioContext.createOscillator();
+
+
+        const envelope =
+            audioContext.createGain();
+
+
+        oscillator.type =
+            "sine";
+
+
+        oscillator.frequency.setValueAtTime(
+            frequency,
+            now
+        );
+
+
+        envelope.gain.setValueAtTime(
+            0,
+            now
+        );
+
+
+        envelope.gain.linearRampToValueAtTime(
+            0.18,
+            now + 0.08
+        );
+
+
+        envelope.gain.exponentialRampToValueAtTime(
+            0.001,
+            now + 1.15
+        );
+
+
+        oscillator.connect(
+            envelope
+        );
+
+
+        envelope.connect(
+            masterGain
+        );
+
+
+        oscillator.start(
+            now
+        );
+
+
+        oscillator.stop(
+            now + 1.2
+        );
+
+    }
+
+
+    function musicTick() {
+
+        if (!musicPlaying) {
+
+            return;
+
+        }
+
+
+        playNote(
+            melody[
+                musicStep %
+                melody.length
+            ]
+        );
+
+
+        musicStep += 1;
+
+    }
+
+
+    async function toggleRufus() {
+
+        initializeAudio();
+
+
+        if (!audioContext) {
+
+            if (musicLabel) {
+
+                musicLabel.textContent =
+                    "Audio unavailable";
+
+            }
+
+            return;
+
+        }
+
+
+        if (
+            audioContext.state ===
+            "suspended"
+        ) {
+
+            await audioContext.resume();
+
+        }
+
+
+        if (musicPlaying) {
+
+            musicPlaying =
+                false;
+
+
+            clearInterval(
+                musicTimer
+            );
+
+
+            musicTimer =
+                null;
+
+
+            visualizer?.classList.remove(
+                "playing"
+            );
+
+
+            musicButton?.classList.remove(
+                "is-playing"
+            );
+
+
+            musicButton?.setAttribute(
+                "aria-pressed",
+                "false"
+            );
+
+
+            if (musicLabel) {
+
+                musicLabel.textContent =
+                    "Ambient mode";
+
+            }
+
+
+            if (musicButton) {
+
+                musicButton.textContent =
+                    "▶";
+
+            }
+
+
+            return;
+
+        }
+
+
+        musicPlaying =
+            true;
+
+
+        visualizer?.classList.add(
+            "playing"
+        );
+
+
+        musicButton?.classList.add(
+            "is-playing"
+        );
+
+
+        musicButton?.setAttribute(
+            "aria-pressed",
+            "true"
+        );
+
+
+        if (musicLabel) {
+
+            musicLabel.textContent =
+                "Playing";
+
+        }
+
+
+        if (musicButton) {
+
+            musicButton.textContent =
+                "Ⅱ";
+
+        }
+
+
+        musicStep =
+            Math.floor(
+                Math.random()
+                *
+                melody.length
+            );
+
+
+        musicTick();
+
+
+        musicTimer =
+            setInterval(
+                musicTick,
+                850
+            );
+
+    }
+
+
+    if (
+        musicButton
+    ) {
+
+        musicButton.addEventListener(
+            "click",
+            toggleRufus
+        );
+
+    }
+
+
+    if (
+        musicVolume
+    ) {
+
+        musicVolume.addEventListener(
+            "input",
+            () => {
+
+                initializeAudio();
+
+
+                if (
+                    masterGain
+                ) {
+
+                    masterGain.gain.value =
+                        Number(
+                            musicVolume.value
+                        );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Fynelet
+     * ---------------------------------------------------------
+     */
 
 
     function hashString(
@@ -1239,21 +1979,13 @@
 
                 tinyContext.drawImage(
                     image,
-
                     sourceX,
-
                     sourceY,
-
                     sourceSize,
-
                     sourceSize,
-
                     0,
-
                     0,
-
                     48,
-
                     48
                 );
 
@@ -1396,7 +2128,7 @@
             ) {
 
                 throw new Error(
-                    "No pixellet image."
+                    "No image returned."
                 );
 
             }
@@ -1417,7 +2149,8 @@
 
             }
 
-        } catch (error) {
+
+        } catch {
 
             if (
                 sourceLabel

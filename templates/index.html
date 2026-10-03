@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -64,7 +65,8 @@
 
         :root {
 
-            color-scheme: dark;
+            color-scheme:
+                dark;
 
         }
 
@@ -108,41 +110,56 @@
 
                 #070A18;
 
-            overflow-x: hidden;
+            overflow-x:
+                hidden;
 
         }
 
 
         .ambient {
 
-            position: fixed;
+            position:
+                fixed;
 
-            inset: 0;
+            inset:
+                0;
 
-            overflow: hidden;
+            overflow:
+                hidden;
 
-            pointer-events: none;
+            pointer-events:
+                none;
 
-            z-index: 0;
+            z-index:
+                0;
 
         }
 
 
         .orb {
 
-            position: absolute;
+            position:
+                absolute;
 
-            border-radius: 9999px;
+            border-radius:
+                9999px;
 
-            filter: blur(80px);
+            filter:
+                blur(80px);
 
-            opacity: .30;
+            opacity:
+                .30;
 
             animation:
+
                 floatOrb
+
                 12s
+
                 ease-in-out
+
                 infinite
+
                 alternate;
 
         }
@@ -150,49 +167,66 @@
 
         .orb-one {
 
-            width: 300px;
+            width:
+                300px;
 
-            height: 300px;
+            height:
+                300px;
 
-            left: -70px;
+            left:
+                -70px;
 
-            top: 20%;
+            top:
+                20%;
 
-            background: #FFB703;
+            background:
+                #FFB703;
 
         }
 
 
         .orb-two {
 
-            width: 350px;
+            width:
+                350px;
 
-            height: 350px;
+            height:
+                350px;
 
-            right: -100px;
+            right:
+                -100px;
 
-            top: 5%;
+            top:
+                5%;
 
-            background: #00D9FF;
+            background:
+                #00D9FF;
 
-            animation-delay: -3s;
+            animation-delay:
+                -3s;
 
         }
 
 
         .orb-three {
 
-            width: 380px;
+            width:
+                380px;
 
-            height: 380px;
+            height:
+                380px;
 
-            left: 38%;
+            left:
+                38%;
 
-            bottom: -190px;
+            bottom:
+                -190px;
 
-            background: #9B5DE5;
+            background:
+                #9B5DE5;
 
-            animation-delay: -6s;
+            animation-delay:
+                -6s;
 
         }
 
@@ -228,9 +262,11 @@
 
         .grid-glow {
 
-            position: absolute;
+            position:
+                absolute;
 
-            inset: 0;
+            inset:
+                0;
 
             background-image:
 
@@ -261,6 +297,7 @@
                 42px 42px;
 
             mask-image:
+
                 linear-gradient(
                     to bottom,
                     black,
@@ -439,15 +476,20 @@
 
         .cursor-glow {
 
-            position: fixed;
+            position:
+                fixed;
 
-            width: 240px;
+            width:
+                240px;
 
-            height: 240px;
+            height:
+                240px;
 
-            border-radius: 9999px;
+            border-radius:
+                9999px;
 
-            pointer-events: none;
+            pointer-events:
+                none;
 
             transform:
                 translate(
@@ -468,15 +510,20 @@
                     transparent 68%
                 );
 
-            z-index: 1;
+            z-index:
+                1;
 
         }
+
+
+        /*
+         * Search Suggestions
+         */
 
 
         .fyne-suggestions {
 
             animation:
-
                 suggestionIn
                 .16s
                 ease-out;
@@ -488,7 +535,8 @@
 
             from {
 
-                opacity: 0;
+                opacity:
+                    0;
 
                 transform:
                     translateY(-6px);
@@ -497,7 +545,8 @@
 
             to {
 
-                opacity: 1;
+                opacity:
+                    1;
 
                 transform:
                     translateY(0);
@@ -507,21 +556,60 @@
         }
 
 
+        .fyne-suggestion-header {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                9px
+                12px
+                7px;
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                .14em;
+
+            text-transform:
+                uppercase;
+
+            color:
+                #64748B;
+
+        }
+
+
         .fyne-suggestion-item {
 
-            width: 100%;
+            width:
+                100%;
 
-            display: flex;
+            display:
+                flex;
 
-            align-items: center;
+            align-items:
+                center;
 
-            gap: 12px;
+            gap:
+                12px;
 
             padding:
                 12px
                 13px;
 
-            border-radius: 13px;
+            border-radius:
+                13px;
 
             color:
                 #CBD5E1;
@@ -529,7 +617,8 @@
             background:
                 transparent;
 
-            text-align: left;
+            text-align:
+                left;
 
             transition:
 
@@ -563,19 +652,26 @@
 
         .fyne-suggestion-icon {
 
-            width: 30px;
+            width:
+                30px;
 
-            height: 30px;
+            height:
+                30px;
 
-            flex-shrink: 0;
+            flex-shrink:
+                0;
 
-            display: flex;
+            display:
+                flex;
 
-            align-items: center;
+            align-items:
+                center;
 
-            justify-content: center;
+            justify-content:
+                center;
 
-            border-radius: 10px;
+            border-radius:
+                10px;
 
             background:
 
@@ -603,17 +699,23 @@
 
         .fyne-suggestion-text {
 
-            min-width: 0;
+            min-width:
+                0;
 
-            flex: 1;
+            flex:
+                1;
 
-            overflow: hidden;
+            overflow:
+                hidden;
 
-            white-space: nowrap;
+            white-space:
+                nowrap;
 
-            text-overflow: ellipsis;
+            text-overflow:
+                ellipsis;
 
-            font-size: 14px;
+            font-size:
+                14px;
 
         }
 
@@ -622,6 +724,520 @@
 
             color:
                 #64748B;
+
+        }
+
+
+        /*
+         * Recent Search Row
+         */
+
+
+        .fyne-recent-item {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+
+            width:
+                100%;
+
+            border-radius:
+                13px;
+
+            transition:
+                background .15s ease;
+
+        }
+
+
+        .fyne-recent-item:hover {
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .06
+                );
+
+        }
+
+
+        .fyne-recent-main {
+
+            min-width:
+                0;
+
+            flex:
+                1;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            padding:
+                10px
+                8px
+                10px
+                10px;
+
+            text-align:
+                left;
+
+            color:
+                #CBD5E1;
+
+            background:
+                transparent;
+
+        }
+
+
+        .fyne-recent-main:hover {
+
+            color:
+                #FFFFFF;
+
+        }
+
+
+        .fyne-recent-delete {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            width:
+                32px;
+
+            height:
+                32px;
+
+            margin-right:
+                5px;
+
+            border-radius:
+                9999px;
+
+            color:
+                #64748B;
+
+            font-size:
+                20px;
+
+            line-height:
+                1;
+
+            transition:
+
+                background .15s ease,
+
+                color .15s ease;
+
+        }
+
+
+        .fyne-recent-delete:hover {
+
+            background:
+                rgba(
+                    248,
+                    113,
+                    113,
+                    .12
+                );
+
+            color:
+                #FCA5A5;
+
+        }
+
+
+        .fyne-clear-all {
+
+            width:
+                100%;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            margin-top:
+                5px;
+
+            padding:
+                9px
+                12px;
+
+            border-top:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .06
+                );
+
+            color:
+                #64748B;
+
+            font-size:
+                11px;
+
+            transition:
+                color .15s ease;
+
+        }
+
+
+        .fyne-clear-all:hover {
+
+            color:
+                #FCA5A5;
+
+        }
+
+
+        /*
+         * Rufus
+         */
+
+
+        .rufus-player {
+
+            position:
+                fixed;
+
+            right:
+                20px;
+
+            bottom:
+                20px;
+
+            z-index:
+                80;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            padding:
+                9px
+                12px;
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(
+                    10,
+                    14,
+                    30,
+                    .78
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    .10
+                );
+
+            backdrop-filter:
+                blur(16px);
+
+            -webkit-backdrop-filter:
+                blur(16px);
+
+            box-shadow:
+                0 15px 50px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .28
+                );
+
+        }
+
+
+        .rufus-button {
+
+            width:
+                36px;
+
+            height:
+                36px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                999px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #FFD43B,
+                    #FF9F1C
+                );
+
+            color:
+                #10131F;
+
+            font-weight:
+                800;
+
+            transition:
+
+                transform .18s ease,
+
+                box-shadow .18s ease;
+
+        }
+
+
+        .rufus-button:hover {
+
+            transform:
+                scale(1.08);
+
+            box-shadow:
+                0 0 25px
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .30
+                );
+
+        }
+
+
+        .rufus-button.is-playing {
+
+            box-shadow:
+                0 0 25px
+                rgba(
+                    255,
+                    212,
+                    59,
+                    .35
+                );
+
+        }
+
+
+        .rufus-info {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            min-width:
+                52px;
+
+        }
+
+
+        .rufus-title {
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                .16em;
+
+            color:
+                #FFD43B;
+
+        }
+
+
+        .rufus-status {
+
+            font-size:
+                10px;
+
+            color:
+                #64748B;
+
+        }
+
+
+        .rufus-visualizer {
+
+            display:
+                flex;
+
+            align-items:
+                end;
+
+            gap:
+                2px;
+
+            height:
+                18px;
+
+        }
+
+
+        .rufus-bar {
+
+            width:
+                3px;
+
+            height:
+                5px;
+
+            border-radius:
+                999px;
+
+            background:
+
+                linear-gradient(
+                    to top,
+                    #FFD43B,
+                    #9B5DE5
+                );
+
+        }
+
+
+        .rufus-visualizer.playing
+        .rufus-bar {
+
+            animation:
+                rufusBar
+                .75s
+                ease-in-out
+                infinite
+                alternate;
+
+        }
+
+
+        .rufus-bar:nth-child(2) {
+
+            animation-delay:
+                .15s;
+
+        }
+
+
+        .rufus-bar:nth-child(3) {
+
+            animation-delay:
+                .28s;
+
+        }
+
+
+        .rufus-bar:nth-child(4) {
+
+            animation-delay:
+                .42s;
+
+        }
+
+
+        .rufus-bar:nth-child(5) {
+
+            animation-delay:
+                .56s;
+
+        }
+
+
+        @keyframes rufusBar {
+
+            from {
+
+                height:
+                    4px;
+
+            }
+
+            to {
+
+                height:
+                    17px;
+
+            }
+
+        }
+
+
+        .rufus-volume {
+
+            width:
+                54px;
+
+            accent-color:
+                #FFD43B;
+
+        }
+
+
+        @media (max-width: 640px) {
+
+            .rufus-player {
+
+                right:
+                    12px;
+
+                bottom:
+                    12px;
+
+            }
+
+
+            .rufus-volume {
+
+                display:
+                    none;
+
+            }
 
         }
 
@@ -657,6 +1273,7 @@
     <header
         class="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 lg:px-8"
     >
+
 
         <a
             href="/"
@@ -771,16 +1388,13 @@
         </a>
 
 
-        <div class="flex items-center gap-2">
+        <a
+            href="#features"
+            class="hidden rounded-full px-4 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white sm:block"
+        >
+            What makes it different?
+        </a>
 
-            <a
-                href="#features"
-                class="hidden rounded-full px-4 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white sm:block"
-            >
-                What makes it different?
-            </a>
-
-        </div>
 
     </header>
 
@@ -812,7 +1426,9 @@
                 class="mb-6 flex justify-center"
             >
 
-                <div class="relative">
+                <div
+                    class="relative"
+                >
 
                     <div
                         class="absolute -inset-10 rounded-full bg-yellow-400/10 blur-3xl"
@@ -938,7 +1554,7 @@
             >
                 Search beyond limits.
                 Live results, smart suggestions,
-                and a little personality.
+                tiny Fynelets, and a little personality.
             </p>
 
 
@@ -950,6 +1566,7 @@
                 class="mx-auto mt-9 w-full max-w-3xl"
             >
 
+
                 <div
                     class="relative"
                 >
@@ -958,7 +1575,6 @@
                     <div
                         class="search-shell flex items-center rounded-full overflow-hidden p-1.5"
                     >
-
 
                         <svg
                             class="ml-5 h-5 w-5 shrink-0 text-slate-400"
@@ -1070,7 +1686,7 @@
 
 
                     <div
-                        class="fyne-suggestions hidden absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#0D1225]/95 p-2 shadow-2xl backdrop-blur-xl"
+                        class="fyne-suggestions hidden absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#0D1225]/95 p-2 text-left shadow-2xl backdrop-blur-xl"
                         role="listbox"
                         aria-label="Search suggestions"
                     ></div>
@@ -1177,16 +1793,14 @@
                     ✦
                 </div>
 
-                <h2
-                    class="font-semibold"
-                >
+                <h2 class="font-semibold">
                     FyneSpark
                 </h2>
 
                 <p
                     class="mt-2 text-sm leading-6 text-slate-400"
                 >
-                    Lightweight relevance ranking that pays extra attention to the title, URL, and snippet.
+                    A lightweight relevance pass gives stronger attention to important query matches.
                 </p>
 
             </article>
@@ -1202,16 +1816,14 @@
                     ↯
                 </div>
 
-                <h2
-                    class="font-semibold"
-                >
+                <h2 class="font-semibold">
                     Live Web
                 </h2>
 
                 <p
                     class="mt-2 text-sm leading-6 text-slate-400"
                 >
-                    Search the public web rather than being restricted to the original mock dataset.
+                    Search the public web rather than being restricted to a fixed demonstration dataset.
                 </p>
 
             </article>
@@ -1227,16 +1839,14 @@
                     ◈
                 </div>
 
-                <h2
-                    class="font-semibold"
-                >
+                <h2 class="font-semibold">
                     Fynelet
                 </h2>
 
                 <p
                     class="mt-2 text-sm leading-6 text-slate-400"
                 >
-                    Your search creates a tiny moving pixel-art companion on the results page.
+                    Every search can create a tiny pixel-art companion based on what you searched for.
                 </p>
 
             </article>
@@ -1247,27 +1857,19 @@
             >
 
                 <div
-                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-green-400/10 text-lg text-green-300"
+                    class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-400/10 text-lg text-violet-300"
                 >
-                    /
+                    ♫
                 </div>
 
-                <h2
-                    class="font-semibold"
-                >
-                    Keyboard Ready
+                <h2 class="font-semibold">
+                    Rufus
                 </h2>
 
                 <p
                     class="mt-2 text-sm leading-6 text-slate-400"
                 >
-                    Press
-                    <kbd
-                        class="rounded border border-white/10 px-1.5 py-0.5 text-[11px]"
-                    >
-                        /
-                    </kbd>
-                    to jump into search.
+                    Optional ambient sound generated directly in your browser while you search.
                 </p>
 
             </article>
@@ -1294,6 +1896,87 @@
     </main>
 
 
+    <div
+        class="rufus-player"
+    >
+
+        <button
+            id="rufus-button"
+            class="rufus-button"
+            type="button"
+            aria-label="Play Rufus"
+            aria-pressed="false"
+            title="Play Rufus"
+        >
+            ▶
+        </button>
+
+
+        <div
+            class="rufus-info"
+        >
+
+            <span
+                class="rufus-title"
+            >
+                RUFUS
+            </span>
+
+
+            <span
+                id="rufus-label"
+                class="rufus-status"
+            >
+                Ambient mode
+            </span>
+
+        </div>
+
+
+        <div
+            id="rufus-visualizer"
+            class="rufus-visualizer"
+            aria-hidden="true"
+        >
+
+            <span
+                class="rufus-bar"
+            ></span>
+
+            <span
+                class="rufus-bar"
+            ></span>
+
+            <span
+                class="rufus-bar"
+            ></span>
+
+            <span
+                class="rufus-bar"
+            ></span>
+
+            <span
+                class="rufus-bar"
+            ></span>
+
+        </div>
+
+
+        <input
+            id="rufus-volume"
+            class="rufus-volume"
+            type="range"
+            min="0"
+            max="0.12"
+            step="0.005"
+            value="0.045"
+            aria-label="Rufus volume"
+            title="Rufus volume"
+        >
+
+    </div>
+
+
     <footer
         class="relative z-10 border-t border-white/5 px-5 py-5"
     >
@@ -1306,9 +1989,11 @@
                 © 2026 FyneApple
             </span>
 
+
             <span>
                 Flask · Tailwind CSS · Vanilla JavaScript
             </span>
+
 
             <span>
                 Search smart. Stay curious.
@@ -1319,7 +2004,10 @@
     </footer>
 
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='app.js') }}"
+    ></script>
+
 
 </body>
 
